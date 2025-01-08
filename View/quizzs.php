@@ -1,6 +1,6 @@
 <?php
 ?>
-<h1 class="text-center">Liste des personnes</h1>
+<h1 class="text-center">Liste des quizz</h1>
 <div class="d-flex justify-content-center">
     <div class="spinner-grow text-warning d-none" id="spinner" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -18,20 +18,27 @@
 
     </tbody>
 </table>
-<div id="footer-table" class="row">
-    <button id="prev-page" type="button" class="col-1 btn ">|<</button>
-    <p class="col-10 text-center" id="page-count">Hello</p>
-    <button id="next-page" type="button" class="col-1 btn">>|</button>
-</div>
 
+
+<nav aria-label="...">
+    <ul class="pagination">
+        <li id="prev-page" class="page-item">
+            <a  class="page-link">Previous</a>
+        </li>
+       <li id="page-count" class="page-item d-flex flex-row"> </li>
+        <li id="next-page" class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+    </ul>
+</nav>
 <script src="./Assets/JavaScript/Services/quizz.js" type="module"></script>
 <script type="module">
 
     import {getQuizz} from "./Assets/Javascript/Services/quizz.js";
-    import {GetRow} from "./Assets/Javascript/Component/quizz.js";
+    import {getRow} from "./Assets/Javascript/Component/quizz.js";
 
     document.addEventListener('DOMContentLoaded', async () =>{
-        const tbody = document.querySelector("#list-quizzs")
+        const tbody = document.querySelector("#list-quizzs tbody")
 
         const nextBtnElement = document.querySelector('#next-page')
         const prevBtnElement = document.querySelector('#prev-page')
@@ -47,13 +54,26 @@
             data = await getQuizz(page, limit)
             tbody.innerHTML = ""
             for(let i = 0; i < data.quizzs.length; i++){
-                tbody.innerHtml += GetRow(data.quizzs[i])
+                tbody.innerHTML += getRow(data.quizzs[i])
             }
+
+            if(page <= 1){
+                prevBtnElement.classList.add("disabled")
+            }else{
+                prevBtnElement.classList.remove("disabled")
+            }
+
+            if(page >= maxPage){
+                nextBtnElement.classList.add("disabled")
+            }else{
+                nextBtnElement.classList.remove("disabled")
+            }
+
             countPage.innerHTML = ""
             for(let i = 1; i <= maxPage; i++){
-                countPage.innerHTML += `<button type="button" data-page='${i}' class="button-change-page btn m-1 btn-primary">${i}</button>`
+                countPage.innerHTML += `<a data-page='${i}' class="page-item page-link change-page" href="#">${i}</a>`
             }
-            const btnPage = document.querySelectorAll('.button-change-page')
+            const btnPage = document.querySelectorAll('.change-page')
             for(let i = 0; i < btnPage.length; i++){
                 btnPage[i].addEventListener('click', (event) => {
                     page = event.target.getAttribute('data-page')
@@ -63,20 +83,18 @@
             spinner.classList.add('d-none')
         }
 
-        await displayQuizzs()
-        nextBtnElement.addEventListener('click',async () => {
-            if (page < maxPage){
-                console.log(`Page next = ${page}`)
-                page ++
-                await  displayPersons()
+        prevBtnElement.addEventListener('click',async () => {
+            if (page  > 1){
+                page --
+                await displayQuizzs()
             }
         })
 
-        prevBtnElement.addEventListener('click',async () => {
-            if (page  > 1){
-                console.log(`Page prev = ${page}`)
-                page --
-                await displayPersons()
+        await displayQuizzs()
+        nextBtnElement.addEventListener('click',async () => {
+            if (page < maxPage){
+                page ++
+                await  displayQuizzs()
             }
         })
     })

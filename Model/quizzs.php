@@ -3,7 +3,7 @@
 function getAll(PDO $pdo, int $page){
     $query ="SELECT * FROM quizz LIMIT 15";
     if(1 !== $page){
-        $page = ($page -1) *20;
+        $page = ($page -1) *15;
         $query .= " OFFSET $page";
     }
 
