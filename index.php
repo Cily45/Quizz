@@ -10,26 +10,34 @@ if (isset($_GET['logout']) && $_GET['logout']) {
     exit();
 }
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
-
     if (isset($_SESSION['auth'])) {
         if (isset($_GET['component'])) {
             $componentName = !empty($_GET['component']) ?
                 htmlspecialchars($_GET['component'], ENT_QUOTES, 'UTF-8')
-                : 'users';
-
-            $actionName = !empty($_GET['action']) ?
-                htmlspecialchars($_GET['action'], ENT_QUOTES, 'UTF-8')
-                : null;
-
+                : 'quizzsAdmin';
             if (file_exists("Controller/$componentName.php")) {
                 require "Controller/$componentName.php";
             }
+        }
+    } elseif (isset($_GET['component'])) {
+        $componentName = !empty($_GET['component']) ?
+            htmlspecialchars($_GET['component'], ENT_QUOTES, 'UTF-8')
+            : 'quizzs';
+
+        $actionName = !empty($_GET['action']) ?
+            htmlspecialchars($_GET['action'], ENT_QUOTES, 'UTF-8')
+            : null;
+
+        if (file_exists("Controller/$componentName.php")) {
+            require "Controller/$componentName.php";
         }
     } else {
         require "Controller/quizzs.php";
     }
     exit();
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -62,8 +70,8 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
 
 
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
-            $_SERVER['HTTP_X_REQUESTED_WITH'] = "XMLHttpRequest";
-        }
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = "XMLHttpRequest";
+    }
 
     if (isset($_GET['component'])) {
         $componentName = cleanString($_GET['component']);
@@ -75,6 +83,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     } else {
         require "Controller/quizzs.php";
     }
+    require "_Partials/errors.php";
     ?>
 
 </div>

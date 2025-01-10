@@ -1,7 +1,7 @@
 <?php
 
 function getUserAdmin(PDO $pdo,string $username){
-    $res = $pdo->prepare('SELECT * FROM users WHERE username = :username');
+    $res = $pdo->prepare('SELECT * FROM admin_user WHERE username = :username');
     $res->bindValue(':username', $username);
     try{
         $res->execute();

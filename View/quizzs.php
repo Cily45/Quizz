@@ -7,17 +7,9 @@
     </div>
 </div>
 
-<table class="table" id="list-quizzs">
-    <thead>
-    <tr>
-        <th scope="col">id</th>
-        <th scope="col">Quizz</th>
-    </tr>
-    </thead>
-    <tbody>
+<div class="row" id="cards">
 
-    </tbody>
-</table>
+</div>
 
 
 <nav aria-label="...">
@@ -34,39 +26,26 @@
 <script src="./Assets/JavaScript/Services/quizz.js" type="module"></script>
 <script type="module">
 
-    import {getQuizz} from "./Assets/Javascript/Services/quizz.js";
-    import {getRow} from "./Assets/Javascript/Component/quizz.js";
-
+    import {getQuizzs} from "./Assets/Javascript/Services/quizz.js";
+    import {getCard} from "./Assets/Javascript/Component/quizz.js";
     document.addEventListener('DOMContentLoaded', async () =>{
-        const tbody = document.querySelector("#list-quizzs tbody")
-
+        const cards = document.querySelector("#cards")
         const nextBtnElement = document.querySelector('#next-page')
         const prevBtnElement = document.querySelector('#prev-page')
+
         let page = 1
         const limit = 15
-        let data = await getQuizz(page)
+        let data = await getQuizzs(page)
         let maxPage = Math.ceil(data.quizzCount.idCount / limit)
 
         const displayQuizzs = async () => {
             const countPage = document.querySelector("#page-count")
             const spinner = document.querySelector("#spinner")
             spinner.classList.remove('d-none')
-            data = await getQuizz(page, limit)
-            tbody.innerHTML = ""
+            data = await getQuizzs(page)
+            cards.innerHTML = ""
             for(let i = 0; i < data.quizzs.length; i++){
-                tbody.innerHTML += getRow(data.quizzs[i])
-            }
-
-            if(page <= 1){
-                prevBtnElement.classList.add("disabled")
-            }else{
-                prevBtnElement.classList.remove("disabled")
-            }
-
-            if(page >= maxPage){
-                nextBtnElement.classList.add("disabled")
-            }else{
-                nextBtnElement.classList.remove("disabled")
+                cards.innerHTML += getCard(data.quizzs[i])
             }
 
             countPage.innerHTML = ""
@@ -80,6 +59,27 @@
                     displayQuizzs()
                 })
             }
+
+             const goBtn = document.querySelectorAll(".go-btn")
+             for(let i = 0; i < goBtn.length; i++){
+                 goBtn[i].addEventListener('click', (event) => {
+                    document.location.href = `index.php?component=quizz&id=${event.target.getAttribute('data-id')}`
+                })
+             }
+
+            if(page <= 1){
+                prevBtnElement.classList.add("disabled")
+            }else{
+                prevBtnElement.classList.remove("disabled")
+            }
+
+            if(page >= maxPage){
+                nextBtnElement.classList.add("disabled")
+            }else{
+                nextBtnElement.classList.remove("disabled")
+            }
+
+
             spinner.classList.add('d-none')
         }
 

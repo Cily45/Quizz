@@ -1,7 +1,9 @@
 <?php
 
 function getAll(PDO $pdo, int $page){
-    $query ="SELECT * FROM quizz LIMIT 15";
+    $query ="SELECT * FROM quizz WHERE is_published =0";
+
+    $query .=  " LIMIT 15";
     if(1 !== $page){
         $page = ($page -1) *15;
         $query .= " OFFSET $page";
@@ -19,7 +21,7 @@ function getAll(PDO $pdo, int $page){
 }
 
 function getCountQuizzs(PDO $pdo){
-    $query ="SELECT COUNT(id) AS `idCount` FROM quizz";
+    $query ="SELECT COUNT(id) AS `idCount` FROM quizz WHERE is_published = 0";
     $state = $pdo->prepare($query);
     try{
         $state->execute();

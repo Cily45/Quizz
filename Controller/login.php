@@ -13,7 +13,9 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
 
         $user = getUserAdmin($pdo, $username);
 
+
         $isMatchPassword = is_array($user) && password_verify($password, $user['password']);
+
 
         if($isMatchPassword) {
             $_SESSION['auth'] = true;

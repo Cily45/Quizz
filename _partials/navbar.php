@@ -1,5 +1,4 @@
 <?php
-var_dump($_SESSION);
 ?>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -10,10 +9,10 @@ var_dump($_SESSION);
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="index.php?component=quizzs" >Home</a>
+                    <a class="nav-link active" aria-current="page" href=<?php echo isset($_SESSION['auth'])?"index.php?component=quizzsAdmin":"index.php?component=quizzs"?> >Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href= "index.php?component=login">Login</a>
+                    <a class="nav-link" href= <?php echo isset($_SESSION['auth'])? 'index.php?logout=true' : 'index.php?component=login' ?>><?php echo isset($_SESSION['auth'])? 'logout' : 'login' ?></a>
                 </li>
 
             </ul>
