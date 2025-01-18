@@ -1,11 +1,13 @@
 <?php
+function getQuizz(PDO $pdo, int $id): array|string
+{
 
-function getQuestions(PDO $pdo, int $id){
-    $state = $pdo->prepare("SELECT * FROM question WHERE quizz_id = :id");
-    $state->bindValue(":id", $id);
+    $state = $pdo->prepare("SELECT * FROM quizz WHERE id = :id");
+    $state->bindParam(':id', $id, PDO::PARAM_INT);
+
     try{
         $state->execute();
-        return $state->fetchAll(PDO::FETCH_ASSOC);
+        return $state->fetchAll(PDO::FETCH_OBJ);
     }catch(Exception $e){
         return $e->getMessage();
     }

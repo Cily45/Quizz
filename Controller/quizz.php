@@ -5,14 +5,17 @@
 require 'Model/quizz.php';
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
     $id = isset($_GET['id']) ? cleanString($_GET['id']) : null;
-    $question = getQuestion($pdo,$id);
-    if(!is_array($question)){
-        $errors[] = $question;
+
+    $quizz = getQuizz($pdo,$id);
+
+    if(!is_array($quizz)){
+        $errors[] = $quizz;
     }
+
     header('Content-Type: application/json');
     echo json_encode(
         [
-            'question' => $question
+            'quizz' => $quizz,
         ]
     );
     exit();

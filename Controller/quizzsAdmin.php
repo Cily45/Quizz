@@ -3,6 +3,8 @@
  * @var PDO $pdo
  */
 require 'Model/quizzsAdmin.php';
+
+
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
     if (
         isset($_GET['action']) &&
@@ -14,20 +16,22 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
         switch ($action) {
             case 'delete':
                 $delete = delete($pdo, $id);
-                if (!empty($delete)) {
-                    $delete = "Impossible de supprimer l'utilisateur car celui-ci est encore lié !";
-                    $errors[] = $delete;
+                header('Content-Type: application/json');
+                if (is_bool($delete)) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['error' => $delete]);
                 }
-                break;
-
+                exit();
             case 'updateIsPublished':
-                $isPublished = $_GET['isPublished'] ?? null;
-                $change = isPublished($pdo, $id, $isPublished);
-                if (!empty($change)) {
-                    $change = "Impossible de supprimer l'utilisateur car celui-ci est encore lié !";
-                    $errors[] = $change;
+                $change = isPublished($pdo, $id);
+                header('Content-Type: application/json');
+                if (is_bool($change)) {
+                    echo json_encode(['success' => true]);
+                } else {
+                    echo json_encode(['error' => $change]);
                 }
-                break;
+                exit();
 
             default:
                 break;

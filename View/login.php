@@ -1,5 +1,3 @@
-<?php
-?>
 <div id="errors">
 
 </div>

@@ -1,0 +1,5 @@
+/composer.lock
+/composer.json
+/vendor/
+/.idea/
+/.env

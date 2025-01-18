@@ -1,7 +1,13 @@
 <?php
 session_start();
+require __DIR__ . '/vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->safeLoad();
 require 'Includes/database.php';
 require 'Includes/functions.php';
+require("_partials/errors.php");
+
+//var_dump($_ENV);
 
 $errors = [];
 if (isset($_GET['logout']) && $_GET['logout']) {
@@ -87,6 +93,8 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     ?>
 
 </div>
+<?php require "_partials/_toast.html"; ?>
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>

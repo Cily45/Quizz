@@ -33,28 +33,29 @@ function getCountQuizzsAdmin(PDO $pdo){
     }
 }
 
-function delete(PDO $pdo, int $id)
+function delete(PDO $pdo, int $id): true|string
 {
     $state= $pdo->prepare("DELETE FROM quizz WHERE id = :id");
     $state->bindParam(':id', $id, PDO::PARAM_INT);
     try {
 
         $state->execute();
-        return true;
     }
     catch (PDOException $e) {
-        return $e ->getMessage();
+        return " erreur : ".$e->getCode() .' '. $e->getMessage();
     }
+    return true;
 }
 
-function isPublished(PDO $pdo, int $id, int $isPublished){
-    $state= $pdo->prepare("UPDATE quizz SET is_published = :isPublished WHERE id = :id");
-    $state->bindParam(':isPublished', $isPublished, PDO::PARAM_INT);
+function isPublished(PDO $pdo, int $id): true|string
+{
+    $state= $pdo->prepare("UPDATE quizz SET is_published = NOT is_published WHERE id = :id");
     $state->bindParam(':id', $id, PDO::PARAM_INT);
     try{
         $state->execute();
     }catch(PDOException $e){
-        return $e ->getMessage();
+        return " erreur : ".$e->getCode() .' '. $e->getMessage();
     }
+    return true;
 }
 

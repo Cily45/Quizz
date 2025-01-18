@@ -4,7 +4,6 @@
  */
 require 'Model/login.php';
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
-    $errors = [];
     $username = !empty($_POST['username']) ? $_POST['username'] : null;
     $password = !empty($_POST['password']) ? $_POST['password'] : null;
     if(!empty($username) || !empty($password)){
