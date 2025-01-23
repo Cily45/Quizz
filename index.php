@@ -7,8 +7,6 @@ require 'Includes/database.php';
 require 'Includes/functions.php';
 require("_partials/errors.php");
 
-//var_dump($_ENV);
-
 $errors = [];
 if (isset($_GET['logout']) && $_GET['logout']) {
     session_destroy();

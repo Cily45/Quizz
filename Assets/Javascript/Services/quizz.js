@@ -8,12 +8,17 @@ export const getQuizzs = async (page)=>{
 }
 
 export const getQuizz = async (id)=>{
-    const response = await fetch(`index.php?component=quizz&id=${id}`,{
-        headers:{
-            'X-Requested-With':'XMLHttpRequest'
-        }
-    })
-    return await response.json()
+    let response = null
+
+    if(id !== 0){
+         response = await fetch(`index.php?component=quizz&id=${id}`,{
+            headers:{
+                'X-Requested-With':'XMLHttpRequest'
+            }
+        })
+    }
+
+    return await response !== null ? response.json() : response
 }
 
 

@@ -3,9 +3,9 @@
 function getAll(PDO $pdo, int $page){
     $query ="SELECT * FROM quizz WHERE is_published =0";
 
-    $query .=  " LIMIT 15";
+    $query .=  " LIMIT 16";
     if(1 !== $page){
-        $page = ($page -1) *15;
+        $page = ($page -1) *16;
         $query .= " OFFSET $page";
     }
 

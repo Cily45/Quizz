@@ -3,19 +3,21 @@
 <div class="container">
 <h1 class="text-center" id="title-quizz">Quizz</h1>
 
-    <div class="progress" id="progress-bar" role="progressbar" aria-label="Info example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress m-3" id="progress-bar" role="progressbar" aria-label="Info example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
         <div class="progress-bar" id="progress-bar-text" style="width: 0%">0%</div>
     </div>
 
 </div>
 <div class="container border">
-    <h2 class=" text-center m-3" id="title-question">Question 1</h2>
-        <div id="answers" class="m-2 ms-5">
+    <div id="result">
 
-        </div>
+    </div>
+    <div id="displayQuestions">
+
+    </div>
     <div id="btn" class="d-flex flex-row justify-content-between m-3">
         <button type="button" class="btn btn-primary" id="previous-btn" disabled>Precédent</button>
-        <button type="button" class="btn btn-primary" id="next-btn" disabled>Suivant</button>
+        <button type="button" class="btn btn-primary" id="next-btn">Suivant</button>
     </div>
 </div>
 
@@ -25,67 +27,62 @@
 
 
     import {getQuizz} from "./Assets/Javascript/Services/quizz.js";
-    import {displayQuestion, displayResultQuizz} from "./Assets/Javascript/Component/question.js";
+    import {displayResultQuizz, getQuestion, changeQuestion, updateProgressBar, countScore, getResult, isChecked} from "./Assets/Javascript/Component/question.js";
 
 
     document.addEventListener('DOMContentLoaded', async () => {
-
-        const data = await getQuizz(<?php echo $_GET['id'] ?? 0 ?>);
+        const URL = new URLSearchParams(window.location.search)
+        const id = URL.get('id')
+        const data = await getQuizz(id);
         const titleQuizz = document.querySelector('#title-quizz')
-        const progressBarElement = document.querySelector("#progress-bar")
-        const progressBarText = document.querySelector("#progress-bar-text")
         const nextBtn = document.querySelector("#next-btn")
         const previousBtn = document.querySelector("#previous-btn")
-        const countQuestions = data.questions.length
+
+        const questions = JSON.parse(data.quizz[0].questions)
+        const countQuestions = questions.length
         const PROGRESS_BAR_WIDTH =  Math.trunc(100 / countQuestions)
         let progressCount = 0
         let currentQuestion = 0
-        const userAnswer = []
-        let countIsChecked = 0
-        let curentScore = 0
-
+        let scoreCount = []
 
         titleQuizz.innerHTML = data.quizz[0].name
-        displayQuestion(currentQuestion, data)
+        document.querySelector("#displayQuestions").innerHTML = getQuestion(questions)
 
-        const checkInput = document.querySelectorAll('.form-check-input')
-        for(let i = 0; i < checkInput.length; i++){
-            checkInput[i].addEventListener('click', () =>{
-                if(checkInput[i].checked){
-                    countIsChecked++
-                }else{
-                    countIsChecked--
-                }
-                nextBtn.disabled = countIsChecked === 0
-                nextBtn.disabled = i === checkInput.length - 1
-            })
-        }
+        document.querySelector("#question-0-content").classList.remove('d-none')
 
         nextBtn.addEventListener('click', () =>{
+            const formQuestion = document.querySelector(`#form-question-${currentQuestion}`)
+
+
+            if (!isChecked(currentQuestion)) {
+                formQuestion.reportValidity()
+                return false
+            }
+
             currentQuestion++;
             progressCount = currentQuestion === countQuestions ? 100 : progressCount + PROGRESS_BAR_WIDTH
-            updateProgressBar()
+            updateProgressBar(progressCount)
             if(currentQuestion === countQuestions){
-                displayResultQuizz(curentScore, [4,6])
+                document.querySelector(`#question-${currentQuestion-1}-content`).classList.add('d-none')
+                const reducer = (accumulator, curr) => accumulator + curr;
+
+                displayResultQuizz(scoreCount.reduce(reducer), getResult(scoreCount), id)
             }else{
-                displayQuestion(currentQuestion, data)
+                scoreCount[currentQuestion-1] = countScore(questions[currentQuestion-1].answers, currentQuestion-1)
+                changeQuestion(currentQuestion-1, currentQuestion)
             }
+            previousBtn.disabled = currentQuestion === 0
 
         })
 
         previousBtn.addEventListener('click', () =>{
             currentQuestion--;
             progressCount -= PROGRESS_BAR_WIDTH
-            updateProgressBar()
-            displayQuestion(currentQuestion, data)
+            updateProgressBar(progressCount)
+            changeQuestion(currentQuestion+1, currentQuestion)
+
+            previousBtn.disabled = currentQuestion === 0
+
         })
-
-
-
-        const updateProgressBar = () => {
-            progressBarText.style.width = `${progressCount}%`
-            progressBarText.innerHTML = `${progressCount}%`
-            progressBarElement.setAttribute('aria-valuenow', progressCount)
-        }
     })
 </script>

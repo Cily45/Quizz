@@ -9,7 +9,7 @@
 <div class="mb-3 ">
     <div class="row">
         <div class="mb-3 d-flex justify-content-end">
-            <a href="index.php?component=quizzAdmin&action=create" type="button" class="btn btn-primary" id="create-quizz-btn"><i class="fa fa-plus me-2"></i>Créer un quizz</a>
+            <a href="index.php?component=quizzAdmin&id=0" type="button" class="btn btn-primary" id="create-quizz-btn"><i class="fa fa-plus me-2"></i>Créer un quizz</a>
         </div>
     </div>
 </div>
