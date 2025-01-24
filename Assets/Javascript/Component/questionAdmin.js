@@ -44,9 +44,9 @@ export const getAnswer = (answer, questionId, answerId) => {
     const newAnswerElement = document.createElement('li');
     newAnswerElement.setAttribute("style", "list-style: none")
     newAnswerElement.setAttribute('id', `answer-${questionId}-${answerId}`)
-    newAnswerElement.innerHTML = `<div class="d-flex flex-row m-3">
+    newAnswerElement.innerHTML = `<div class="d-flex flex-row m-3 justify-content-sm-around">
                 <input type="text" class="form-control answer-text-${questionId}" id="answer-text-${questionId}-${answerId}"placeholder="Entrez l'intituler de la réponse" value="${isNewAnswer ? "" : answer.answer}" required>
-                <input class="form-check-input" data-id="${questionId}-${answerId}" type="checkbox" value="" id="flexCheck-${questionId}-${answerId}" ${isNewAnswer ? "" : answer.score > 0 ? 'checked' : ''}>
+                <input class="form-check-input answer-score-check" data-id="${questionId}-${answerId}" type="checkbox" value="" id="flexCheck-${questionId}-${answerId}" ${isNewAnswer ? "" : answer.score > 0 ? 'checked' : ''}>
                 <label class="form-check-label" for="flexCheck-${questionId}-${answerId}">bonne reponse</label>
                 <input class="answer-score-${questionId}" id="score-${questionId}-${answerId}" value=${isNewAnswer ? "0" : answer.score} ${isNewAnswer || answer.score === 0 ? 'disabled' : ''}>
                 <i class="fa-solid fa-xmark delete-answer-btn m-3" data-id="${questionId}-${answerId}" style="color: #ff0000;"></i>    
@@ -175,13 +175,21 @@ export const handleValidButton =  (id)  => {
     const validButton = document.querySelector('#valid-btn')
     let result, message
     validButton.addEventListener('click', async() => {
-
+        isMinimunGoodAnswerCorrect()
         if (!form.checkValidity() ) {
             form.reportValidity()
             return false
         }
         if(!isMinimunAnswerCorrect()) {
             alert("Il faut minimum 2 réponses par question")
+            return false
+        }
+        if(!isMinimunQuestionCorrect()) {
+            alert("Il faut minimum 1 question")
+            return false
+        }
+        if(!isMinimunGoodAnswerCorrect()){
+            alert("Il faut minimum 1 bonne réponse par question")
             return false
         }
         const quizz = []
@@ -225,8 +233,7 @@ export const handleValidButton =  (id)  => {
         }
 
         if(result.hasOwnProperty('success')) {
-            showToast(message, 'bg-sucess')
-            (id === '0' ? form.reset() : null)
+            showToast(message, 'bg-success')
         }else{
             showToast(`Une erreur a été rencontrée: ${result.error}`, 'bg-danger')
         }
@@ -238,7 +245,7 @@ export const handleGoodAnswers = () => {
     const accordionElement = document.querySelector(".accordion");
 
     accordionElement.addEventListener('click', (e) => {
-        if (e.target.closest('.answer-score')) {
+        if (e.target.closest('.answer-score-check')) {
             const id = e.target.getAttribute('data-id')
             const input = document.querySelector(`#score-${id}`)
             input.disabled = !e.target.checked
@@ -255,4 +262,25 @@ export const isMinimunAnswerCorrect = () => {
         }
     }
     return true
+}
+export const isMinimunGoodAnswerCorrect = () => {
+    const answers = document.querySelectorAll('.answers')
+    for(let i = 0; i < answers.length; i++){
+        let quantityGoodAnswer = 0
+        for(let j = 0; j < answers[i].children.length; j++){
+            if(answers[i].children[j].children[0].children[1].checked){
+                quantityGoodAnswer++
+            }
+        }
+        if(quantityGoodAnswer < 1){
+            return false
+        }
+    }
+    return true
+}
+
+export const isMinimunQuestionCorrect = () => {
+    const questions = document.querySelector('#accordion')
+        return questions.children.length >= 1;
+
 }

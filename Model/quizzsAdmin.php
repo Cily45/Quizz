@@ -47,7 +47,7 @@ function deleteQuizzAdmin(PDO $pdo, int $id): true|string
     return true;
 }
 
-function upgradeIsPublishedQuizzAdmin(PDO $pdo, int $id): true|string
+function updateIsPublishedQuizzAdmin(PDO $pdo, int $id): true|string
 {
     $state= $pdo->prepare("UPDATE quizz SET is_published = NOT is_published WHERE id = :id");
     $state->bindParam(':id', $id, PDO::PARAM_INT);

@@ -24,7 +24,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
                 }
                 exit();
             case 'updateIsPublished':
-                $change = upgradeIsPublishedQuizzAdmin($pdo, $id);
+                $change = updateIsPublishedQuizzAdmin($pdo, $id);
                 header('Content-Type: application/json');
                 if (is_bool($change)) {
                     echo json_encode(['success' => true]);

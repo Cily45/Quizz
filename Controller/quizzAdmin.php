@@ -7,18 +7,15 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     if (
         isset($_GET['action'])
     ) {
-        $id = cleanString($_GET['id']);
         $action = cleanString($_GET['action']);
+        $data = json_decode(file_get_contents('php://input'));
 
-        $questions = !empty($_POST['questions']) ? cleanString($_POST['questions']) : null;
-
-        //$_POST['quizz']['id']
-        //$_POST['quizz']['name']
-        //$_POST['quizz']['is_published']
-        //$_POST['quizz']['questions']
+        $name = !empty($data->quizz[0]->name) ? cleanString($data->quizz[0]->name) : null;
+        $isPublished = !empty($data->quizz[0]->is_published) ? cleanString($data->quizz[0]->is_published) : 0;
+        $questions = !empty($data->quizz[0]->questions) ? $data->quizz[0]->questions : null;
         switch ($action) {
             case 'create':
-                $create= createQuizz($pdo, $questions);
+                $create= createQuizzAdmin($pdo, $name, $isPublished, $questions);
                 header('Content-Type: application/json');
                 if (is_bool($create)) {
                     echo json_encode(['success' => true]);
@@ -27,7 +24,8 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
                 }
                 exit();
             case 'update':
-                $change = upgradeIsPublishedQuizzAdmin($pdo, $id, $questions);
+                $id = !empty($data->quizz[0]->id) ? cleanString($data->quizz[0]->id) : null;
+                $change = updateQuizzAdmin($pdo, $id, $name,  $isPublished,$questions);
                 header('Content-Type: application/json');
                 if (is_bool($change)) {
                     echo json_encode(['success' => true]);
