@@ -21,6 +21,28 @@ export const getQuizz = async (id)=>{
     return await response !== null ? response.json() : response
 }
 
+export const createQuizz = async (data) => {
+    const response = await fetch(`index.php?component=quizzAdmin&action=create`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    })
+
+    return response.json()
+}
+
+export const updateQuizz = async (data, id) => {
+    const response = await fetch(`index.php?component=quizzAdmin&action=update&id=${id}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        method: 'POST',
+        body: JSON.stringify(data)
+    })
+    return response.json()
+}
 
 
 

@@ -1,69 +1,84 @@
-export const qetAccordion= (question,answers,questionId)=> {
-    return ` 
-            <div  class="accordion-item" draggable="true">
+import {showToast} from "./shared/toast.js";
+import {createQuizz, updateQuizz} from "../Services/quizz.js";
+
+
+export const getAccordion = (question, questionId) => {
+    const newQuestionElement = document.createElement('li');
+    newQuestionElement.classList.add("accordion-item")
+    newQuestionElement.classList.add("list-group-item")
+    newQuestionElement.setAttribute('id', `accordion-${questionId}`)
+    newQuestionElement.setAttribute("draggable", "true")
+    newQuestionElement.innerHTML = ` 
                 <h2 class="accordion-header">    
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse${questionId}" aria-expanded="true" aria-controls="collapse">
                             <div class="input-group flex-nowrap">
-                                <span class="input-group-text  bg-primary text-white" id="addon-wrapping">Question:</span>
-                                <input type="text" class="form-control" placeholder="Entrez votre question" aria-label="Entrez votre question" aria-describedby="addon-wrapping" id="validationCustom01" value="${question}" required>
+                                <span class="input-group-text  bg-primary text-white" id="addon-wrapping-${questionId}">Question:</span>
+                                <input type="text" class="form-control questions" data-id="${questionId}" placeholder="Entrez votre question" aria-label="Entrez votre question" aria-describedby="addon-wrapping-${questionId}" id="question-${questionId}" value="${question}" required>
+                            
                             </div> 
                             <div class="m-3">
-                                <a href="#"> <i class="fa-solid fa-xmark delete-question-btn" data-id="${questionId} style="color: #ff0000;"></i></a> 
+                                <i class="fa-solid fa-xmark delete-question-btn" data-id="${questionId}" style="color: #ff0000;"></i>
                             </div>
                     </button> 
                 </h2>
-                    <div id="collapse${questionId}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div id="collapse${questionId}" class="accordion-collapse collapse" data-bs-parent="#accordion-${questionId}">
                         <div class="accordion-body">
-                             <div id="answers${questionId}" class="col container">
-                               ${answers}
-                             </div>
+                             <ul id="answers-${questionId}" class="col container answers">
+                              
+                             </ul>
                              <div class="mb-3 ">
                                    <div class="row">
                                         <div class="mt-3 d-flex justify-content-end">
                                              <button data-id ="${questionId}" type="button" class="btn btn-primary add-answer-btn">+</button>
                                         </div>
-                                    </div>
-                                </div>
+                                   </div>
+                             </div>
                         </div>
                     </div>
-            </div>
       `
+    return newQuestionElement
 }
-export const getAnswer= (answer)=> {
+export const getAnswer = (answer, questionId, answerId) => {
     const isNewAnswer = answer === ""
-    return `<div class="d-flex flex-row m-3">
-                <input type="text" class="form-control" placeholder="Entrez l'intituler de la réponse" value="${isNewAnswer ? "" : answer.answer }" required>
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" ${isNewAnswer ? "" : answer.score > 0?'checked':''}>
-                <label class="form-check-label" for="flexCheckDefault">bonne reponse</label>
-                <input value=${isNewAnswer ? "" : answer.score} ${isNewAnswer ? "" : answer.score === 0?'disabled':''}>
-                <a href="#"> <i class="fa-solid fa-xmark delete-answer-btn m-3" style="color: #ff0000;"></i></a>       
+    const newAnswerElement = document.createElement('li');
+    newAnswerElement.setAttribute("style", "list-style: none")
+    newAnswerElement.setAttribute('id', `answer-${questionId}-${answerId}`)
+    newAnswerElement.innerHTML = `<div class="d-flex flex-row m-3">
+                <input type="text" class="form-control answer-text-${questionId}" id="answer-text-${questionId}-${answerId}"placeholder="Entrez l'intituler de la réponse" value="${isNewAnswer ? "" : answer.answer}" required>
+                <input class="form-check-input" data-id="${questionId}-${answerId}" type="checkbox" value="" id="flexCheck-${questionId}-${answerId}" ${isNewAnswer ? "" : answer.score > 0 ? 'checked' : ''}>
+                <label class="form-check-label" for="flexCheck-${questionId}-${answerId}">bonne reponse</label>
+                <input class="answer-score-${questionId}" id="score-${questionId}-${answerId}" value=${isNewAnswer ? "0" : answer.score} ${isNewAnswer || answer.score === 0 ? 'disabled' : ''}>
+                <i class="fa-solid fa-xmark delete-answer-btn m-3" data-id="${questionId}-${answerId}" style="color: #ff0000;"></i>    
             </div>`
+
+    return newAnswerElement
 }
 
 
-export const handleAccordion = () =>{
+export const handleAccordion = () => {
     const accordionItems = document.querySelectorAll('.accordion-item')
     let dragStartClientY
     let draggedItem
 
     const handleDragStart = (e) => {
-        const target = e.target
-
+        closeAllCollapse()
+        const target = e.target.closest('.accordion-item')
         target.style.opacity = 0.5
 
         draggedItem = target
         dragStartClientY = e.clientY
     }
     const handleDragEnd = (e) => {
-        const target = e.target
+        const target = e.target.closest('.accordion-item')
+
         target.style.opacity = 1
     }
     const handleDrop = (e) => {
         const target = e.target.closest('.accordion-item')
-        if(dragStartClientY >e.clientY){
+        if (dragStartClientY > e.clientY) {
             target.parentNode.insertBefore(draggedItem, target.previousSibling)
-        }else{
+        } else {
             target.parentNode.insertBefore(draggedItem, target.nextSibling)
 
         }
@@ -74,31 +89,170 @@ export const handleAccordion = () =>{
 
     }
 
-    for (let i = 0; i < accordionItems.length; i++){
+    for (let i = 0; i < accordionItems.length; i++) {
         accordionItems[i].addEventListener('dragstart', handleDragStart)
         accordionItems[i].addEventListener('dragover', handleDragOver)
         accordionItems[i].addEventListener('dragend', handleDragEnd)
         accordionItems[i].addEventListener('drop', handleDrop)
     }
 }
-export const handleAddAnswer = () =>{
-    const addAnswerBtnElements = document.querySelectorAll(".add-answer-btn")
-    console.log("ii")
-    for(let i = 0; i < addAnswerBtnElements.length; i++){
-        addAnswerBtnElements[i].addEventListener('click', (e) =>{
+export const handleAddAnswer = () => {
+    const accordionElement = document.querySelector("#accordion");
+
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.add-answer-btn')) {
+            const questionId = e.target.getAttribute('data-id');
+            const answerContainer = document.querySelector(`#answers-${questionId}`);
+
+            if (answerContainer.children.length < 8) {
+                let id = 0
+                if (answerContainer.children.length > 0) {
+                    const idLastAnswer = answerContainer.lastChild.getAttribute('id').split('-')
+                    id = parseInt(idLastAnswer[idLastAnswer.length - 1]) + 1
+                }
+
+                const newAnswerElement = document.createElement('div');
+                newAnswerElement.appendChild(getAnswer("", questionId, id));
+
+                answerContainer.appendChild(newAnswerElement.firstChild);
+            }
+        }
+    });
+
+}
+export const handleAddQuestion = () => {
+    const addQuestionBtnElements = document.querySelector("#add-question-btn");
+
+    addQuestionBtnElements.addEventListener('click', (e) => {
+        const questionContainer = document.querySelector("#accordion");
+
+        if (questionContainer.children.length < 30) {
+            let id = 0
+
+            if (questionContainer.children.length > 0) {
+                const idLastAnswer = questionContainer.lastChild.getAttribute('id').split('-')
+                id = parseInt(idLastAnswer[idLastAnswer.length - 1]) + 1
+            }
+            const newQuestion = getAccordion("", id);
+            questionContainer.appendChild(newQuestion);
+        }
+    });
+};
+export const handleRemoveQuestion = () => {
+    const accordionElement = document.querySelector("#accordion");
+
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.delete-question-btn')) {
             const id = e.target.getAttribute('data-id')
-            const answer = document.querySelectorAll(`#answers${id}`)
-            answer.innerHTML += getAnswer("")
-        })
+            document.querySelector(`#accordion-${id}`).remove()
+        }
+    });
+}
+
+export const handleRemoveAnswer = () => {
+    const accordionElement = document.querySelector(".accordion");
+
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.delete-answer-btn')) {
+            const id = e.target.getAttribute('data-id')
+            document.querySelector(`#answer-${id}`).remove()
+        }
+    });
+};
+
+
+const closeAllCollapse = () => {
+    const collapseAccordionElements = document.querySelectorAll(".accordion-collapse")
+    const accordionButtonElements = document.querySelectorAll('.accordion-button')
+    for (let i = 0; i < collapseAccordionElements.length; i++) {
+        collapseAccordionElements[i].classList.remove("show")
+        accordionButtonElements[i].classList.add("collapsed")
     }
 }
 
-export const handleRemoveQuestion = () => {
-    const deleteButonElement = document.querySelectorAll(".delete-question-btn")
+export const handleValidButton =  (id)  => {
+    const form = document.querySelector('#quizz-form')
+    const validButton = document.querySelector('#valid-btn')
+    let result, message
+    validButton.addEventListener('click', async() => {
 
-    for(let i = 0; i < deleteButonElement.length; i++){
-        deleteButonElement[i].addEventListener('click' , (e) =>{
-            alert("ok")
-        })
+        if (!form.checkValidity() ) {
+            form.reportValidity()
+            return false
+        }
+        if(!isMinimunAnswerCorrect()) {
+            alert("Il faut minimum 2 réponses par question")
+            return false
+        }
+        const quizz = []
+        const questionsData = []
+        const questions = document.querySelectorAll(".questions")
+
+        for (let i = 0; i < questions.length; i++) {
+            const answersData = []
+            const questionId = questions[i].getAttribute('data-id')
+            const answers = document.querySelectorAll(`.answer-text-${questionId}`)
+            const scoresAnswers = document.querySelectorAll(`.answer-score-${questionId}`)
+            let countGoodAnswer = 0
+
+            for (let j = 0; j < answers.length; j++) {
+                const score = scoresAnswers[j].value
+                answersData.push({"answer": answers[j].value, "score": score, "isCorrect": (score === '0' ? 1 : 0)})
+                if (score > 0) {
+                    countGoodAnswer++;
+                }
+            }
+
+            questionsData.push({
+                "answers": answersData,
+                "question": questions[i].value,
+                "isMultipleCorrectAnswer": (countGoodAnswer > 1 ? 0 : 1)
+            })
+        }
+
+        quizz.push({"id": parseInt(id),
+                    "name": document.querySelector('#quizz-name').value,
+                    "is_published": document.querySelector('#flexCheckPublished').checked ? 0 : 1,
+                    "questions": JSON.stringify(questionsData)})
+
+        const data = { quizz }
+        if(id === '0'){
+            result = await createQuizz(data)
+            message = 'Le quizz a été créé avec succès'
+        }else{
+           result = await updateQuizz(data, id)
+            message = 'Le quizz a été modifié avec succès'
+        }
+
+        if(result.hasOwnProperty('success')) {
+            showToast(message, 'bg-sucess')
+            (id === '0' ? form.reset() : null)
+        }else{
+            showToast(`Une erreur a été rencontrée: ${result.error}`, 'bg-danger')
+        }
+    })
+
+}
+
+export const handleGoodAnswers = () => {
+    const accordionElement = document.querySelector(".accordion");
+
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.answer-score')) {
+            const id = e.target.getAttribute('data-id')
+            const input = document.querySelector(`#score-${id}`)
+            input.disabled = !e.target.checked
+            input.value = input.disabled ? 0 : 1
+        }
+    });
+}
+
+export const isMinimunAnswerCorrect = () => {
+    const answers = document.querySelectorAll('.answers')
+    for(let i = 0; i < answers.length; i++){
+        if(answers[i].children.length < 2){
+            return false
+        }
     }
+    return true
 }

@@ -15,7 +15,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
         $action = cleanString($_GET['action']);
         switch ($action) {
             case 'delete':
-                $delete = delete($pdo, $id);
+                $delete = deleteQuizzAdmin($pdo, $id);
                 header('Content-Type: application/json');
                 if (is_bool($delete)) {
                     echo json_encode(['success' => true]);
@@ -24,7 +24,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
                 }
                 exit();
             case 'updateIsPublished':
-                $change = isPublished($pdo, $id);
+                $change = upgradeIsPublishedQuizzAdmin($pdo, $id);
                 header('Content-Type: application/json');
                 if (is_bool($change)) {
                     echo json_encode(['success' => true]);
