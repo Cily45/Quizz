@@ -10,7 +10,10 @@
     <div class="mb-3 ">
         <div class="row">
             <div class="mt-3 d-flex justify-content-end">
-                <a href="#" type="button" class="btn btn-primary" id="add-question-btn"><i class="fa fa-plus me-2"></i>Ajouter une question</a>
+                <a href="#" type="button" class="btn btn-primary" id="add-question-btn">
+                    <i class="fa fa-plus me-2"></i>
+                    Ajouter une question
+                </a>
             </div>
         </div>
     </div>
@@ -36,7 +39,21 @@
 <script src="./Assets/JavaScript/Services/quizzAdmin.js" type="module"></script>
 <script type="module">
     import {getQuizzAdmin} from "./Assets/Javascript/Services/quizzAdmin.js";
-    import {getAccordion, getAnswer, handleAccordion, handleAddAnswer, handleRemoveQuestion,handleValidButton, handleRemoveAnswer, handleAddQuestion, handleGoodAnswers} from "./Assets/Javascript/Component/questionAdmin.js";
+    import {
+        getAccordion,
+        getAnswer,
+        handleChevron,
+        handleAccordion,
+        handleAddAnswer,
+        handleRemoveQuestion,
+        handleValidButton,
+        handleRemoveAnswer,
+        handleAddQuestion,
+        handleGoodAnswersCheck,
+        handleGoodAnswersInput,
+        handleInput
+    }
+        from "./Assets/Javascript/Component/quizzAdmin.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const accordionElement = document.querySelector(".accordion")
@@ -47,28 +64,34 @@
         let data
         let countQuestion = 0
 
-        if(id !== '0'){
+        if (id !== '0') {
             data = await getQuizzAdmin(id)
             quizzName.setAttribute('value', data.quizz[0].name)
             const questions = JSON.parse(data.quizz[0].questions)
+
             for (let i = 0; i < questions.length; i++) {
                 const answers = questions[i].answers
                 accordionElement.appendChild(getAccordion(questions[i].question, countQuestion))
                 const currentQuestion = document.querySelector(`#answers-${countQuestion}`)
+
                 for (let j = 0; j < answers.length; j++) {
                     currentQuestion.appendChild(getAnswer(answers[j], i, j))
                 }
+
                 countQuestion++
             }
         }
 
-        handleAccordion()
         handleAddAnswer()
         handleRemoveQuestion()
         handleRemoveAnswer()
         handleAddQuestion(countQuestion)
         handleValidButton(id)
-        handleGoodAnswers()
+        handleGoodAnswersCheck()
+        handleGoodAnswersInput()
+        handleAccordion()
+        handleChevron()
+        handleInput()
 
         validButton.innerHTML = id === '0' ? "Créer" : "Modifier"
     })

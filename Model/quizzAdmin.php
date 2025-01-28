@@ -16,12 +16,15 @@ function getQuizzAdmin(PDO $pdo, int $id): array|string
 function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $questions): array|bool
 {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $query="INSERT INTO quizz (name, is_published, questions) VALUES 
-            (:name, :is_published, :questions)";
+
+    $query="INSERT INTO quizz (name, is_published, questions) VALUES (:name, :is_published, :questions)";
+
     $prep = $pdo->prepare($query);
+
     $prep->bindValue(':name', $name,);
     $prep->bindValue(':is_published', $isPublished,);
     $prep->bindValue(':questions', $questions);
+
     try
     {
         $prep->execute();
@@ -30,6 +33,7 @@ function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $ques
     {
         return " erreur : ".$e->getCode() .' :</b> '. $e->getMessage();
     }
+
     $prep->closeCursor();
 
     return true;
@@ -37,8 +41,11 @@ function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $ques
 
 function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, string $questions){
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
     $query="UPDATE quizz SET id = :id, name = :name, is_published = :is_published, questions = :questions WHERE id = :id";
+
     $prep = $pdo->prepare($query);
+
     $prep->bindValue(':id', $id, PDO::PARAM_INT);
     $prep->bindValue(':name', $name,);
     $prep->bindValue(':is_published', $isPublished,);
@@ -52,6 +59,7 @@ function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, str
     {
         return " erreur : ".$e->getCode() .' :</b> '. $e->getMessage();
     }
+
     $prep->closeCursor();
 
     return true;

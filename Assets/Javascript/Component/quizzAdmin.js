@@ -1,161 +1,363 @@
-import {deletteQuizz, getQuizzsAdmin, updateIsPublishedQuizz} from "../Services/quizzAdmin.js";
 import {showToast} from "./shared/toast.js";
+import {createQuizz, updateQuizz} from "../Services/quizz.js";
 
-export const handleSortBy =  (page, sortBy)  => {
-    const sortItem = document.querySelectorAll('.sort-by-item')
 
-    for(let i = 0; i < sortItem.length; i++){
-        sortItem[i].addEventListener('click', async(event) => {
-            sortBy = event.target.getAttribute('data-sort-by')
-            event.target.setAttribute('data-sort-by',(sortBy.includes("ASC") ? sortBy.substring(0,sortBy.length-3)+"DESC" : sortBy.substring(0,sortBy.length-4)+"ASC"))
-            await displayQuizzs(page, sortBy)
+export const getAccordion = (question, questionId) => {
+    const newQuestionElement = document.createElement('li');
+    newQuestionElement.classList.add("accordion-item")
+    newQuestionElement.classList.add("list-group-item")
+    newQuestionElement.setAttribute('id', `accordion-${questionId}`)
+    newQuestionElement.setAttribute("draggable", "true")
+    newQuestionElement.innerHTML = ` 
+                <h2 class="accordion-header" >    
+                    <div class="d-flex justify-content-xxl-between m-3">
+                        <div id="question-${questionId}">
+                            ${question === "" ? "Entrez votre Question" : question}
+                        </div>
+                        <div >
+                           <a href="#" class="m-5"> 
+                                <i class="fa-solid fa-xmark delete-question-btn" 
+                                data-id="${questionId}" 
+                                style="color: #ff0000;"></i>
+                           </a>
+                           <a href="#" class="m-3 collapsed collapse-btn"  data-bs-toggle="collapse" data-bs-target="#collapse${questionId}" 
+                              aria-expanded="true" aria-controls="collapse">
+                                 <i class="fa-solid fa-chevron-down"></i>
+                           </a> 
+                        </div>
+                    </div>
+                </h2>
+                    <div id="collapse${questionId}" 
+                         class="accordion-collapse collapse" 
+                         data-bs-parent="#accordion-${questionId}">
+                        <div class="accordion-body">
+                            <input type="text" class="form-control questions" id="question-${questionId}"
+                                   data-id="${questionId}" placeholder="Entrez votre question" 
+                                   aria-label="Entrez votre question" aria-describedby="addon-wrapping-${questionId}"  
+                                   value="${question}" required>
+
+                             <ul id="answers-${questionId}" class="col container answers">
+                              
+                             </ul>
+                             <div class="mb-3 ">
+                                   <div class="row">
+                                        <div class="mt-3 d-flex justify-content-end">
+                                             <button data-id ="${questionId}" type="button" 
+                                                     class="btn btn-primary add-answer-btn">+</button>
+                                        </div>
+                                   </div>
+                             </div>
+                        </div>
+                    </div>
+      `
+    return newQuestionElement
+}
+export const getAnswer = (answer, questionId, answerId) => {
+    const isNewAnswer = answer === ""
+    const newAnswerElement = document.createElement('li')
+
+    newAnswerElement.setAttribute("style", "list-style: none")
+    newAnswerElement.setAttribute('id', `answer-${questionId}-${answerId}`)
+    newAnswerElement.innerHTML = `
+            <div class="d-flex flex-row m-3 justify-content-sm-around">
+                <input type="text" class="form-control answer-text-${questionId} m-2" 
+                       id="answer-text-${questionId}-${answerId}" placeholder="Entrez l'intituler de la réponse" 
+                       value="${isNewAnswer ? "" : answer.answer}" required>
+                       
+                <input type="checkbox" class="form-check-input answer-score-check m-2" data-id="${questionId}-${answerId}"
+                       value="" id="flexCheck-${questionId}-${answerId}" ${isNewAnswer ? "" : answer.score > 0 ? 'checked' : ''}>
+                       
+                <label class="form-check-label" for="flexCheck-${questionId}-${answerId}">bonne reponse</label>
+                <input type="number" data-id="${questionId}-${answerId}" 
+                       class="answer-score-input answer-score-${questionId} m-2" 
+                       style="width: 50px" id="score-${questionId}-${answerId}" 
+                       value=${isNewAnswer ? 0 : parseInt(answer.score)} ${isNewAnswer || parseInt(answer.score) === 0 ? 'disabled' : ''}>
+               
+                <i class="fa-solid fa-xmark delete-answer-btn m-3" data-id="${questionId}-${answerId}" style="color: #ff0000;"></i>    
+            </div>`
+
+    return newAnswerElement
+}
+export const handleChevron = () => {
+    const collapseButton = document.querySelectorAll(".collapse-btn")
+
+    for (let i = 0; i < collapseButton.length; i++) {
+        collapseButton[i].addEventListener('click', (e) => {
+            collapseButton[i].innerHTML = collapseButton[i].innerHTML === `<i class="fa-solid fa-chevron-up"></i>`
+                ? `<i class="fa-solid fa-chevron-down"></i>` : `<i class="fa-solid fa-chevron-up"></i>`
         })
-    }}
+    }
+}
+export const handleAccordion = () => {
+    const accordionItems = document.querySelectorAll('.accordion-item')
+    let dragStartClientY
+    let draggedItem
 
-export const displayQuizzs = async (page, sortBy) => {
-    const spinner = document.querySelector("#spinner")
-    const listElement  = document.querySelector("#list-quizzs")
+    const handleDragStart = (e) => {
+        closeAllCollapse()
+        const target = e.target.closest('.accordion-item')
+        target.style.opacity = 0.5
 
-    spinner.classList.remove('d-none')
-    let data = await getQuizzsAdmin(page,sortBy)
+        draggedItem = target
+        dragStartClientY = e.clientY
+    }
+    const handleDragEnd = (e) => {
+        const target = e.target.closest('.accordion-item')
 
-    const listContent = []
-    for(let i = 0; i < data.quizzs.length; i++){
-        listContent.push(getRow(data.quizzs[i]))
+        target.style.opacity = 1
+    }
+    const handleDrop = (e) => {
+        const target = e.target.closest('.accordion-item')
+        if (dragStartClientY > e.clientY) {
+            target.parentNode.insertBefore(draggedItem, target.previousSibling)
+        } else {
+            target.parentNode.insertBefore(draggedItem, target.nextSibling)
+
+        }
+        draggedItem = null
+    }
+    const handleDragOver = (e) => {
+        e.preventDefault()
+
     }
 
-    listElement.querySelector('tbody').innerHTML = listContent.join('')
-
-    document.querySelector('#pagination').innerHTML = getPagination(data.quizzCount.idCount)
-    handlePaginationNavigation(page, sortBy)
-    handlePublishedClick(page, sortBy)
-    handleDeleteClick(page, sortBy)
-    handleUpdateClick()
-
-    spinner.classList.add('d-none')
+    for (let i = 0; i < accordionItems.length; i++) {
+        accordionItems[i].addEventListener('dragstart', handleDragStart)
+        accordionItems[i].addEventListener('dragover', handleDragOver)
+        accordionItems[i].addEventListener('dragend', handleDragEnd)
+        accordionItems[i].addEventListener('drop', handleDrop)
+    }
 }
 
-export const handlePaginationNavigation = (page, sortBy) => {
-    const previousPage = document.querySelector('#prev-page')
-    const nextPage = document.querySelector('#next-page')
-    const paginationBtns = document.querySelectorAll('.change-page')
+export const handleAddAnswer = () => {
+    const accordionElement = document.querySelector("#accordion");
 
-    previousPage.addEventListener('click', async () => {
-        if (page > 1 ){
-            page--
-            await displayQuizzs(page, sortBy)
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.add-answer-btn')) {
+            const questionId = e.target.getAttribute('data-id');
+            const answerContainer = document.querySelector(`#answers-${questionId}`)
+
+            if (answerContainer.children.length < 8) {
+                let id = 0
+                if (answerContainer.children.length > 0) {
+                    const idLastAnswer = answerContainer.lastChild.getAttribute('id').split('-')
+                    id = parseInt(idLastAnswer[idLastAnswer.length - 1]) + 1
+                }
+
+                const newAnswerElement = document.createElement('div')
+                newAnswerElement.appendChild(getAnswer("", questionId, id));
+
+                answerContainer.appendChild(newAnswerElement.firstChild);
+            }
+        }
+    })
+}
+export const handleAddQuestion = () => {
+    const addQuestionBtnElements = document.querySelector("#add-question-btn");
+
+    addQuestionBtnElements.addEventListener('click', (e) => {
+        const questionContainer = document.querySelector("#accordion");
+
+        if (questionContainer.children.length < 30) {
+            let id = 0
+
+            if (questionContainer.children.length > 0) {
+                const idLastAnswer = questionContainer.lastChild.getAttribute('id').split('-')
+                id = parseInt(idLastAnswer[idLastAnswer.length - 1]) + 1
+            }
+            const newQuestion = getAccordion("", id)
+            questionContainer.appendChild(newQuestion)
+        }
+    })
+}
+export const handleRemoveQuestion = () => {
+    const accordionElement = document.querySelector("#accordion");
+
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.delete-question-btn')) {
+            const id = e.target.getAttribute('data-id')
+            document.querySelector(`#accordion-${id}`).remove()
+        }
+    })
+}
+
+export const handleRemoveAnswer = () => {
+    const accordionElement = document.querySelector(".accordion");
+
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.delete-answer-btn')) {
+            const id = e.target.getAttribute('data-id')
+            document.querySelector(`#answer-${id}`).remove()
+        }
+    });
+};
+
+
+const closeAllCollapse = () => {
+    const collapseAccordionElements = document.querySelectorAll(".accordion-collapse")
+    const accordionButtonElements = document.querySelectorAll('.accordion-header')
+    for (let i = 0; i < collapseAccordionElements.length; i++) {
+        collapseAccordionElements[i].classList.remove("show")
+        accordionButtonElements[i].classList.add("collapsed")
+    }
+    const collapseButton = document.querySelectorAll(".collapse-btn")
+    for (let i = 0; i < collapseButton.length; i++) {
+        collapseButton[i].innerHTML = `<i class="fa-solid fa-chevron-down"></i>`
+    }
+}
+
+export const handleValidButton = (id) => {
+    const form = document.querySelector('#quizz-form')
+    const validButton = document.querySelector('#valid-btn')
+    let result, message
+    validButton.addEventListener('click', async () => {
+        isMinimunGoodAnswerCorrect()
+        if (!form.checkValidity()) {
+            form.reportValidity()
+            return false
+        }
+        if (!isMinimunAnswerCorrect()) {
+            alert("Il faut minimum 2 réponses par question")
+            return false
+        }
+        if (!isMinimunQuestionCorrect()) {
+            alert("Il faut minimum 1 question")
+            return false
+        }
+        if (!isMinimunGoodAnswerCorrect()) {
+            alert("Il faut minimum 1 bonne réponse par question")
+            return false
+        }
+        const quizz = []
+        const questionsData = []
+        const questions = document.querySelectorAll(".questions")
+
+        for (let i = 0; i < questions.length; i++) {
+            const answersData = []
+            const questionId = questions[i].getAttribute('data-id')
+            const answers = document.querySelectorAll(`.answer-text-${questionId}`)
+            const scoresAnswers = document.querySelectorAll(`.answer-score-${questionId}`)
+            let countGoodAnswer = 0
+
+            for (let j = 0; j < answers.length; j++) {
+                const score = scoresAnswers[j].value
+                answersData.push({"answer": answers[j].value, "score": score, "isCorrect": (score === '0' ? 1 : 0)})
+                if (score > 0) {
+                    countGoodAnswer++
+                }
+            }
+
+            questionsData.push({
+                "answers": answersData,
+                "question": questions[i].value,
+                "isMultipleCorrectAnswer": (countGoodAnswer > 1 ? 0 : 1)
+            })
+        }
+
+        quizz.push({
+            "id": parseInt(id),
+            "name": document.querySelector('#quizz-name').value,
+            "is_published": document.querySelector('#flexCheckPublished').checked ? 0 : 1,
+            "questions": JSON.stringify(questionsData)
+        })
+
+        const data = {quizz}
+        if (id === '0') {
+            result = await createQuizz(data)
+            message = 'Le quizz a été créé avec succès'
+        } else {
+            result = await updateQuizz(data, id)
+            message = 'Le quizz a été modifié avec succès'
+        }
+
+        if (result.hasOwnProperty('success')) {
+            showToast(message, 'bg-success')
+        } else {
+            showToast(`Une erreur a été rencontrée: ${result.error}`, 'bg-danger')
         }
     })
 
-    for (let i = 0; i < paginationBtns.length; i++){
-        paginationBtns[i].addEventListener('click', async (e) => {
-            const pageNumber = e.target.getAttribute('data-page')
-            await displayQuizzs(pageNumber, sortBy)
-        })
-    }
-
-    nextPage.addEventListener('click', async () => {
-        page++
-
-        await displayQuizzs(page, sortBy)
-    })
 }
 
-export const getPagination = (total, page) => {
-    let maxPage = Math.ceil(total / 15)
-    let paginationButton = []
+export const handleGoodAnswersCheck = () => {
+    const accordionElement = document.querySelector(".accordion")
 
-    paginationButton.push(
-        `<li id="prev-page" class="page-item" ${page <= 1 ? "disable" : ""}>
-            <a class="page-link">Previous</a>
-         </li>`)
-
-        for(let i = 1; i <= maxPage; i++){
-            paginationButton.push(`<li class="page-item"><a data-page='${i}' class="page-item page-link change-page" href="#">${i}</a></li>`)
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.answer-score-check')) {
+            const id = e.target.getAttribute('data-id')
+            const input = document.querySelector(`#score-${id}`)
+            input.disabled = !e.target.checked
+            input.value = input.disabled ? 0 : 1
         }
-
-    paginationButton.push(
-        `<li id="next-page" class="page-item" ${page >= maxPage ? "disable" : ""}>
-            <a class="page-link" href="#">Next</a>
-         </li>`)
-
-    return paginationButton.join('')
+    });
 }
+export const handleGoodAnswersInput = () => {
+    const accordionElement = document.querySelector(".accordion");
 
-export const getRow = (quizz) => {
-    return `
-            <tr>
-            <th scope="row">${quizz.id}</th>
-            <td>${quizz.name}</td>
-            <td><a href="#"><i class="btn-published ${quizz.is_published === 0 ? "fa-regular fa-eye text-success" : "fa-regular fa-eye-slash text-danger"}" data-id=${quizz.id}></i></a>
-                    <div class="spinner-border spinner-border-sm d-none" role="status" id="published-spinner-${quizz.id}">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-            </td>
-            <td><button type="button" class="btn btn-outline-danger btn-delete" data-id=${quizz.id}>Supprimer</button>
-                    <div class="spinner-border spinner-border-sm d-none" role="status" id="delete-spinner-${quizz.id}">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-            </td>
-    <td><button type="button" class="btn btn-primary update-btn" data-id=${quizz.id}>Modifier</button></td>
-    </tr>
-    `
-}
-
-export const handlePublishedClick =  (page, sortBy) => {
-    const btnPublishedElement = document.querySelectorAll(".btn-published")
-    for(let i = 0; i < btnPublishedElement.length; i++){
-        btnPublishedElement[i].addEventListener('click', async (e) => {
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.answer-score-input')) {
             const id = e.target.getAttribute('data-id')
-            const spinner = document.querySelector(`#published-spinner-${id}`)
-            spinner.classList.remove('d-none')
-            const result = await updateIsPublishedQuizz(page, sortBy, id)
+            const checkbox = document.querySelector(`#flexCheck-${id}`)
+            checkbox.checked = parseInt(e.target.value) > 0
+            e.target.disabled = parseInt(e.target.value) <= 0
+        }
+    });
+}
 
-            if (result.hasOwnProperty('success')) {
-                if (e.target.classList.contains('fa-check')) {
-                    e.target.classList.remove('fa-check', 'text-success')
-                    e.target.classList.add('fa-xmark', 'text-danger')
-                } else {
-                    e.target.classList.add('fa-check', 'text-success')
-                    e.target.classList.remove('fa-xmark', 'text-danger')
-                }
-                showToast('La publication du quizz a été modifé avec succès', 'bg-success')
-            } else {
-                showToast(result.error, 'bg-danger')
+export const isMinimunAnswerCorrect = () => {
+    const answers = document.querySelectorAll('.answers')
+    for (let i = 0; i < answers.length; i++) {
+        if (answers[i].children.length < 2) {
+            return false
+        }
+    }
+    return true
+}
+export const isMinimunGoodAnswerCorrect = () => {
+    const answers = document.querySelectorAll('.answers')
+    for (let i = 0; i < answers.length; i++) {
+        let quantityGoodAnswer = 0
+        for (let j = 0; j < answers[i].children.length; j++) {
+            if (answers[i].children[j].children[0].children[1].checked) {
+                quantityGoodAnswer++
             }
-            spinner.classList.add('d-none')
-            await displayQuizzs(page, sortBy)
-        })
+        }
+        if (quantityGoodAnswer < 1) {
+            return false
+        }
     }
+    return true
 }
 
-export const handleDeleteClick =  (page, sortBy) => {
-    const btnPublishedElement = document.querySelectorAll(".btn-delete")
-    for(let i = 0; i < btnPublishedElement.length; i++){
-        btnPublishedElement[i].addEventListener('click', async (e) => {
-            const id = e.target.getAttribute('data-id')
-            const spinner = document.querySelector(`#delete-spinner-${id}`)
-            if(confirm(`Etes-vous sûr de vouloir supprimer le quizz n°${id}`)){
-                spinner.classList.remove('d-none')
-                const result = await deletteQuizz(page, sortBy, id)
+export const isMinimunQuestionCorrect = () => {
+    const questions = document.querySelector('#accordion')
 
-                if (result.hasOwnProperty('success')) {
-                    showToast('Le quizz été supprimé avec succès', 'bg-success')
-                } else {
-                    showToast(result.error, 'bg-danger')
-                }
-                spinner.classList.add('d-none')
-                await displayQuizzs(page, sortBy)
-            }
-        })
-    }
+    return questions.children.length >= 1
 }
 
-export const handleUpdateClick = () => {
-    const updateBtns = document.querySelectorAll(".update-btn")
-    for(let i = 0 ; i < updateBtns.length; i++){
-        updateBtns[i].addEventListener('click', (e) =>{
-            document.location.href = `index.php?component=quizzAdmin&action=update&id=${e.target.getAttribute('data-id')}`
-        })
-    }
+export const handleInput = () => {
+    const accordionElement = document.querySelector(".accordion");
+
+     accordionElement.addEventListener('click', (e) => {
+         if (e.target.closest('.form-control')) {
+             e.target.addEventListener('focusin', () => {
+                 document.querySelectorAll('.accordion-item').forEach(bloc => {
+                     bloc.setAttribute('draggable', false)
+                 })
+             })
+
+             e.target.addEventListener('focusout', () => {
+                 document.querySelectorAll('.accordion-item').forEach(bloc => {
+                     bloc.setAttribute('draggable', true)
+                     if(e.target.classList.value.includes("questions")) {
+                         document.querySelector(`#question-${e.target.getAttribute("data-id")}`).innerHTML = e.target.value
+                     }
+                 })
+             })
+         }
+     })
 }
+
+
+
+

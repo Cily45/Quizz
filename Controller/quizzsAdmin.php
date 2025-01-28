@@ -24,12 +24,12 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
                 }
                 exit();
             case 'updateIsPublished':
-                $change = updateIsPublishedQuizzAdmin($pdo, $id);
+                $res = updateIsPublishedQuizzAdmin($pdo, $id);
                 header('Content-Type: application/json');
-                if (is_bool($change)) {
+                if (is_bool($res)) {
                     echo json_encode(['success' => true]);
                 } else {
-                    echo json_encode(['error' => $change]);
+                    echo json_encode(['error' => $res]);
                 }
                 exit();
 
@@ -42,6 +42,10 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     $sortby = isset($_GET['sortby']) ? cleanString($_GET['sortby']) : null;
     $countPersons = getCountQuizzsAdmin($pdo);
     $quizzs = getAllQuizzsAdmin($pdo,$page,$sortby);
+
+    if (!is_array($quizzs)) {
+        $errors[] = $quizzs;
+    }
 
     header('Content-Type: application/json');
     echo json_encode(

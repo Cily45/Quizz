@@ -1,9 +1,12 @@
 export const getQuizzs = async (page)=>{
+
     const response = await fetch(`index.php?component=quizzs&page=${page}`,{
         headers:{
             'X-Requested-With':'XMLHttpRequest'
-        }
+        },
+        method: 'POST',
     })
+
     return await response.json()
 }
 
@@ -13,7 +16,8 @@ export const getQuizz = async (id)=>{
     if(id !== 0){
          response = await fetch(`index.php?component=quizz&id=${id}`,{
             headers:{
-                'X-Requested-With':'XMLHttpRequest'
+                'X-Requested-With':'XMLHttpRequest',
+                method: 'POST',
             }
         })
     }
@@ -22,6 +26,7 @@ export const getQuizz = async (id)=>{
 }
 
 export const createQuizz = async (data) => {
+
     const response = await fetch(`index.php?component=quizzAdmin&action=create`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -34,6 +39,7 @@ export const createQuizz = async (data) => {
 }
 
 export const updateQuizz = async (data, id) => {
+
     const response = await fetch(`index.php?component=quizzAdmin&action=update&id=${id}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -41,6 +47,7 @@ export const updateQuizz = async (data, id) => {
         method: 'POST',
         body: JSON.stringify(data)
     })
+
     return response.json()
 }
 

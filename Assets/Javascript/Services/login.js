@@ -1,8 +1,8 @@
 export const login = async (username, password) => {
 
-    const response = await fetch(`index.php?component=login`,{
-        headers:{
-            'X-Requested-With':'XMLHttpRequest'
+    const response = await fetch(`index.php?component=login`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
         },
         method: 'POST',
         body: new URLSearchParams({
@@ -10,6 +10,7 @@ export const login = async (username, password) => {
             password
         })
     })
+
     return await response.json()
 }
 

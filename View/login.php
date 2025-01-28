@@ -1,6 +1,4 @@
-<div id="errors">
 
-</div>
 <form id="login-form">
     <div class="mb-3">
         <label for="username" class="form-label">Username</label>
@@ -15,6 +13,7 @@
 
 <script src="./Assets/JavaScript/Services/login.js" type="module"></script>
 <script type="module">
+    import {showToast} from "./Assets/JavaScript/Component/shared/toast.js";
     import {login} from "./Assets/JavaScript/Services/login.js";
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -22,21 +21,17 @@
 
         validLoginBtn.addEventListener('click', async () => {
             const formLogin = document.querySelector('#login-form')
-            if (!formLogin.checkValidity()){
+
+            if (!formLogin.checkValidity()) {
                 formLogin.reportValidity()
                 return false
             }
-            const loginResult = await login(formLogin.elements['username'].value, formLogin.elements['password'].value)
 
-            if (loginResult.hasOwnProperty('authentication')){
+            const loginResult = await login(formLogin.elements['username'].value, formLogin.elements['password'].value)
+            if (loginResult.hasOwnProperty('authentication')) {
                 document.location.href = 'index.php?component=quizzsAdmin'
-            } else if (loginResult.hasOwnProperty('errors')){
-                const errorsLogsElement = document.querySelector('#errors')
-                errorsLogsElement.innerHTML = `
-                    <div class="alert alert-danger mt-2" role="alert">
-                      ${loginResult.errors.toString()}
-                    </div>
-                    `
+            } else if (loginResult.hasOwnProperty('errors')) {
+                showToast(loginResult.errors[1].toString(), 'bg-danger')
             }
         })
     })
