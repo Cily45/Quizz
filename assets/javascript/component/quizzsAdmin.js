@@ -1,4 +1,4 @@
-import {deletteQuizz, getQuizzsAdmin, updateIsPublishedQuizz} from "../Services/quizzAdmin.js";
+import {deletteQuizz, getQuizzsAdmin, updateIsPublishedQuizz} from "../services/quizzAdmin.js";
 import {showToast} from "./shared/toast.js";
 
 export const handleSortBy = (page, sortBy) => {

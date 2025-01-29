@@ -19,11 +19,11 @@
         </li>
     </ul>
 </nav>
-<script src="./Assets/JavaScript/Services/quizz.js" type="module"></script>
+<script src="./assets/javascript/services/quizz.js" type="module"></script>
 <script type="module">
 
-    import {getQuizzs} from "./Assets/Javascript/Services/quizz.js";
-    import {getCard} from "./Assets/Javascript/Component/quizzs.js";
+    import {getQuizzs} from "./assets/javascript/services/quizz.js";
+    import {getCard} from "./assets/javascript/component/quizzs.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const cards = document.querySelector("#cards")

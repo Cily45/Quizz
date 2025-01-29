@@ -1,5 +1,5 @@
 import {showToast} from "./shared/toast.js";
-import {createQuizz, updateQuizz} from "../Services/quizz.js";
+import {createQuizz, updateQuizz} from "../services/quizzAdmin.js";
 
 
 export const getAccordion = (question, questionId) => {
@@ -20,14 +20,14 @@ export const getAccordion = (question, questionId) => {
                                 data-id="${questionId}" 
                                 style="color: #ff0000;"></i>
                            </a>
-                           <a href="#" class="m-3 collapsed collapse-btn"  data-bs-toggle="collapse" data-bs-target="#collapse${questionId}" 
+                           <a href="#" class="m-3 collapsed collapse-btn"  data-bs-toggle="collapse" data-bs-target="#collapse-${questionId}" 
                               aria-expanded="true" aria-controls="collapse">
                                  <i class="fa-solid fa-chevron-down"></i>
                            </a> 
                         </div>
                     </div>
                 </h2>
-                    <div id="collapse${questionId}" 
+                    <div id="collapse-${questionId}" 
                          class="accordion-collapse collapse" 
                          data-bs-parent="#accordion-${questionId}">
                         <div class="accordion-body">
@@ -152,14 +152,15 @@ export const handleAddAnswer = () => {
 
                 answerContainer.appendChild(newAnswerElement.firstChild);
             }
+
         }
     })
 }
 export const handleAddQuestion = () => {
-    const addQuestionBtnElements = document.querySelector("#add-question-btn");
+    const addQuestionBtnElements = document.querySelector("#add-question-btn")
 
     addQuestionBtnElements.addEventListener('click', (e) => {
-        const questionContainer = document.querySelector("#accordion");
+        const questionContainer = document.querySelector("#accordion")
         closeAllCollapse()
 
         if (questionContainer.children.length < 30) {
@@ -171,6 +172,17 @@ export const handleAddQuestion = () => {
             }
             const newQuestion = getAccordion("", id)
             questionContainer.appendChild(newQuestion)
+
+            const answerContainer = document.querySelector(`#answers-${id}`)
+            const newAnswerElement = document.createElement('div')
+            newAnswerElement.appendChild(getAnswer("", id, 0))
+
+            answerContainer.appendChild(newAnswerElement.firstChild)
+
+            e.preventDefault()
+            const question = document.querySelector(`#collapse-${id}`)
+            question.classList.add('show')
+            question.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'})
         }
     })
 }
@@ -212,17 +224,34 @@ const closeAllCollapse = () => {
 
 export const handleValidButton = (id) => {
     const validButton = document.querySelector('#valid-btn')
+    const form = document.querySelector('#quizz-form')
     let result, message
+
     validButton.addEventListener('click', async () => {
-        isMinimunGoodAnswerCorrect()
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         if (!form.checkValidity()) {
+            const accordions = document.querySelectorAll('.accordion-collapse');
+
+            for(let i = 0; i < accordions.length; i++) {
+                const inputs = accordions[i].querySelectorAll('input');
+
+                for(let j = 0; j < inputs.length; j++) {
+                    if (!inputs[j].validity.valid) {
+                        accordions[i].classList.add('show');
+                    }
+                }
+            }
+
             form.reportValidity()
+
             return false
         }
         if (!isMinimunAnswerCorrect()) {
             alert("Il faut minimum 2 réponses par question")
             return false
         }
+
         if (!isMinimunQuestionCorrect()) {
             alert("Il faut minimum 1 question")
             return false
@@ -231,6 +260,9 @@ export const handleValidButton = (id) => {
             alert("Il faut minimum 1 bonne réponse par question")
             return false
         }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         const quizz = []
         const questionsData = []
         const questions = document.querySelectorAll(".questions")
@@ -265,6 +297,7 @@ export const handleValidButton = (id) => {
         })
 
         const data = {quizz}
+
         if (id === '0') {
             result = await createQuizz(data)
             message = 'Le quizz a été créé avec succès'
@@ -309,6 +342,7 @@ export const handleGoodAnswersInput = () => {
 
 export const isMinimunAnswerCorrect = () => {
     const answers = document.querySelectorAll('.answers')
+
     for (let i = 0; i < answers.length; i++) {
         if (answers[i].children.length < 2) {
             return false
@@ -339,7 +373,7 @@ export const isMinimunQuestionCorrect = () => {
 }
 
 export const handleInput = () => {
-    const accordionElement = document.querySelector(".accordion");
+    const accordionElement = document.querySelector("#accordion");
 
      accordionElement.addEventListener('click', (e) => {
          if (e.target.closest('.form-control')) {

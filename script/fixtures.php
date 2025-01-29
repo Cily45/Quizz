@@ -3,10 +3,10 @@
  * @var PDO $pdo
  */
 
-require './vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable('./');
+require '../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable('../');
 $dotenv->safeLoad();
-require './Includes/database.php';
+require '../includes/database.php';
 $faker = Faker\Factory::create('fr_FR');
 
 for ($i = 0; $i < 100; $i++) {

@@ -2,7 +2,7 @@
 /**
  * @var PDO $pdo
  */
-require 'Model/quizzsAdmin.php';
+require 'model/quizzsAdmin.php';
 
 
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
@@ -58,4 +58,4 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     );
     exit();
 }
-require 'View/quizzsAdmin.php';
+require 'view/quizzsAdmin.php';

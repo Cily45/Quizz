@@ -2,7 +2,7 @@
 /**
  * @var PDO $pdo
  */
-require 'Model/login.php';
+require 'model/login.php';
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
     $username = !empty($_POST['username']) ? $_POST['username'] : null;
     $password = !empty($_POST['password']) ? $_POST['password'] : null;
@@ -29,4 +29,4 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
         }
     }
 }
-require 'View/login.php';
+require 'view/login.php';

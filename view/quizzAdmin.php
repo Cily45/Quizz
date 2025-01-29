@@ -2,7 +2,7 @@
 ?>
 
 <form id="quizz-form">
-    <div class="input-group flex-nowrap">
+    <div class="input-group flex-nowrap mt-3">
         <span class="input-group-text" id="addon-wrapping">Nom du quizz</span>
         <input type="text" class="form-control" id="quizz-name" placeholder="Entrez l'intituler du quizz"
                aria-label="Nom du quizz" aria-describedby="addon-wrapping" required>
@@ -36,9 +36,9 @@
 </div>
 
 
-<script src="./Assets/JavaScript/Services/quizzAdmin.js" type="module"></script>
+<script src="./assets/javascript/services/quizzAdmin.js" type="module"></script>
 <script type="module">
-    import {getQuizzAdmin} from "./Assets/Javascript/Services/quizzAdmin.js";
+    import {getQuizzAdmin} from "./assets/javascript/services/quizzAdmin.js";
     import {
         getAccordion,
         getAnswer,
@@ -53,7 +53,7 @@
         handleGoodAnswersInput,
         handleInput
     }
-        from "./Assets/Javascript/Component/quizzAdmin.js";
+        from "./assets/javascript/component/quizzAdmin.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const accordionElement = document.querySelector(".accordion")
@@ -80,8 +80,10 @@
 
                 countQuestion++
             }
+        }else{
+            accordionElement.appendChild(getAccordion( "", 0))
         }
-
+        handleInput()
         handleAddAnswer()
         handleRemoveQuestion()
         handleRemoveAnswer()
@@ -91,7 +93,7 @@
         handleGoodAnswersInput()
         handleAccordion()
         handleChevron()
-        handleInput()
+
 
         validButton.innerHTML = id === '0' ? "Créer" : "Modifier"
     })

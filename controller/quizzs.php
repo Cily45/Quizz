@@ -2,7 +2,7 @@
 /**
  * @var PDO $pdo
  */
-require 'Model/quizzs.php';
+require 'model/quizzs.php';
 
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
     $page = isset($_GET['page']) ? cleanString($_GET['page']) : null;
@@ -23,4 +23,4 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     exit();
 }
 
-require 'View/quizzs.php';
+require 'view/quizzs.php';

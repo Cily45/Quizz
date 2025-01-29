@@ -11,10 +11,10 @@
     <button type="button" id="login-btn" class="btn btn-primary">Valider</button>
 </form>
 
-<script src="./Assets/JavaScript/Services/login.js" type="module"></script>
+<script src="./assets/javascript/services/login.js" type="module"></script>
 <script type="module">
-    import {showToast} from "./Assets/JavaScript/Component/shared/toast.js";
-    import {login} from "./Assets/JavaScript/Services/login.js";
+    import {showToast} from "./assets/javascript/component/shared/toast.js";
+    import {login} from "./assets/javascript/services/login.js";
 
     document.addEventListener('DOMContentLoaded', () => {
         const validLoginBtn = document.querySelector('#login-btn')

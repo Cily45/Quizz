@@ -10,7 +10,7 @@ export const getQuestion = (questions) => {
                         </div> 
                         <div class="user-answer">
                             ${questions[i].isMultipleCorrectAnswer === 0 ?
-                                getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
+            getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
                         </div>
                  
                     </form>
@@ -154,21 +154,21 @@ const handleCorrection = (questions) => {
 
     correctionButton.addEventListener('click', (e) => {
         const questionElements = document.querySelectorAll(".question")
-e.preventDefault()
+        e.preventDefault()
+
         for (let i = 0; i < questionElements.length; i++) {
             questionElements[i].classList.remove("d-none")
         }
 
-
-        questionElements[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+        questionElements[0].scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'});
 
     })
 }
 
-const answerDnone = () =>{
+const answerDnone = () => {
     const answersUser = document.querySelectorAll('.user-answer')
 
-    for(let i = 0 ; i  < answersUser.length; i++){
+    for (let i = 0; i < answersUser.length; i++) {
         answersUser[i].classList.add('d-none')
     }
 }
@@ -183,12 +183,12 @@ const answersCorrection = (questions) => {
         newAnswers.classList.add('list-group')
 
         for (let j = 0; j < checkElements.length; j++) {
-            newAnswers.innerHTML +=`
+            newAnswers.innerHTML += `
                    <li class="list-group-item ms-5"  
-                       style="color:${checkElements[j].checked && answers[j].isCorrect === 1 ? 
-                                         "red" : answers[j].isCorrect === 0 && checkElements[j].checked ? 
-                                         "LimeGreen" : !checkElements[j].checked && answers[j].isCorrect === 0 ?
-                                         "LightGreen" : "" };"> 
+                       style="color:${checkElements[j].checked && answers[j].isCorrect === 1 ?
+                "red" : answers[j].isCorrect === 0 && checkElements[j].checked ?
+                    "LimeGreen" : !checkElements[j].checked && answers[j].isCorrect === 0 ?
+                        "LightGreen" : ""};"> 
                        
                                 <i class="fa-regular fa-square${checkElements[j].checked ? "-check" : ""}"></i>
                         ${answers[j].answer} 

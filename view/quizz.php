@@ -17,10 +17,10 @@
         <button type="button" class="btn btn-primary" id="next-btn">Suivant</button>
     </div>
 </div>
-<script src="./Assets/JavaScript/Services/quizz.js" type="module"></script>
+<script src="./assets/javascript/services/quizz.js" type="module"></script>
 <script type="module">
 
-    import {getQuizz} from "./Assets/Javascript/Services/quizz.js";
+    import {getQuizz} from "./assets/javascript/services/quizz.js";
     import {
         displayResultQuizz,
         getQuestion,
@@ -30,7 +30,7 @@
         getResult,
         isChecked,
         sumScore
-    } from "./Assets/Javascript/Component/quizz.js";
+    } from "./assets/javascript/component/quizz.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         const URL = new URLSearchParams(window.location.search)

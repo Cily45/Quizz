@@ -3,8 +3,8 @@ session_start();
 require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->safeLoad();
-require 'Includes/database.php';
-require 'Includes/helper.php';
+require 'includes/database.php';
+require 'includes/helper.php';
 require("_partials/errors.php");
 
 $errors[] = [];
@@ -21,13 +21,13 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
             $componentName = !empty($_GET['component']) ?
                 htmlspecialchars($_GET['component'], ENT_QUOTES, 'UTF-8')
                 : 'quizzsAdmin';
-            if (file_exists("Controller/$componentName.php") && str_contains($_GET['component'], "Admin")) {
-                require "Controller/$componentName.php";
+            if (file_exists("controller/$componentName.php") && str_contains($_GET['component'], "Admin")) {
+                require "controller/$componentName.php";
             }else{
-                require "Controller/quizzsAdmin.php";
+                require "controller/quizzsAdmin.php";
             }
         }else{
-            require "Controller/quizzsAdmin.php";
+            require "controller/quizzsAdmin.php";
         }
     } elseif (isset($_GET['component'])) {
         $componentName = !empty($_GET['component']) ?
@@ -38,13 +38,13 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
             htmlspecialchars($_GET['action'], ENT_QUOTES, 'UTF-8')
             : null;
 
-        if (file_exists("Controller/$componentName.php") && !str_contains($_GET['component'], "Admin")) {
-            require "Controller/$componentName.php";
+        if (file_exists("controller/$componentName.php") && !str_contains($_GET['component'], "Admin")) {
+            require "controller/$componentName.php";
         }else{
-            require "Controller/quizzs.php";
+            require "controller/quizzs.php";
         }
     } else {
-        require "Controller/quizzs.php";
+        require "controller/quizzs.php";
     }
     exit();
 }
@@ -69,20 +69,20 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
 <body>
 <div class="container">
     <?php
-    require "_Partials/navbar.php";
+    require "_partials/navbar.php";
 
     if (isset($_SESSION['auth'])) {
         if (isset($_GET['component'])) {
             $componentName = !empty($_GET['component']) ?
                 htmlspecialchars($_GET['component'], ENT_QUOTES, 'UTF-8')
                 : 'quizzsAdmin';
-            if (file_exists("Controller/$componentName.php") && str_contains($_GET['component'], "Admin")) {
-                require "Controller/$componentName.php";
+            if (file_exists("controller/$componentName.php") && str_contains($_GET['component'], "Admin")) {
+                require "controller/$componentName.php";
             }else{
-                require "Controller/quizzsAdmin.php";
+                require "controller/quizzsAdmin.php";
             }
         }else{
-            require "Controller/quizzsAdmin.php";
+            require "controller/quizzsAdmin.php";
         }
     } elseif (isset($_GET['component'])) {
         $componentName = !empty($_GET['component']) ?
@@ -93,21 +93,21 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
             htmlspecialchars($_GET['action'], ENT_QUOTES, 'UTF-8')
             : null;
 
-        if (file_exists("Controller/$componentName.php") && !str_contains($_GET['component'], "Admin")) {
-            require "Controller/$componentName.php";
+        if (file_exists("controller/$componentName.php") && !str_contains($_GET['component'], "Admin")) {
+            require "controller/$componentName.php";
         }else{
-            require "Controller/quizzs.php";
+            require "controller/quizzs.php";
         }
     } else {
-        require "Controller/quizzs.php";
+        require "controller/quizzs.php";
     }
     ?>
 
 </div>
 <?php require "_partials/_toast.html"; ?>
-<script src="Includes/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="includes/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-<script src="Includes/chart.js"></script>
+<script src="includes/chart.js"></script>
 
 </body>
 </html>

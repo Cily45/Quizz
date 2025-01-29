@@ -35,10 +35,10 @@
 
     </ul>
 </nav>
-<script src="./Assets/JavaScript/Services/quizzAdmin.js" type="module"></script>
-<script src="./Assets/JavaScript/Component/quizzsAdmin.js" type="module"></script>
+<script src="./assets/javascript/services/quizzAdmin.js" type="module"></script>
+<script src="./assets/javascript/component/quizzsAdmin.js" type="module"></script>
 <script type="module">
-    import {displayQuizzs, handleSortBy} from "./Assets/JavaScript/Component/quizzsAdmin.js";
+    import {displayQuizzs, handleSortBy} from "./assets/javascript/component/quizzsAdmin.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
         let page = 1
