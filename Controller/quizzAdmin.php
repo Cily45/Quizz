@@ -10,7 +10,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     ) {
         $action = cleanString($_GET['action']);
         $data = json_decode(file_get_contents('php://input'));
-
+        var_dump($data);
         $name = !empty($data->quizz[0]->name) ? cleanString($data->quizz[0]->name) : null;
         $isPublished = !empty($data->quizz[0]->is_published) ? cleanString($data->quizz[0]->is_published) : 0;
         $questions = !empty($data->quizz[0]->questions) ? $data->quizz[0]->questions : null;

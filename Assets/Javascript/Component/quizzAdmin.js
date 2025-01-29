@@ -83,13 +83,15 @@ export const handleChevron = () => {
 
     for (let i = 0; i < collapseButton.length; i++) {
         collapseButton[i].addEventListener('click', (e) => {
+            closeAllCollapse()
+
             collapseButton[i].innerHTML = collapseButton[i].innerHTML === `<i class="fa-solid fa-chevron-up"></i>`
                 ? `<i class="fa-solid fa-chevron-down"></i>` : `<i class="fa-solid fa-chevron-up"></i>`
         })
     }
 }
 export const handleAccordion = () => {
-    const accordionItems = document.querySelectorAll('.accordion-item')
+    const accordionItems = document.querySelectorAll('.accordion')
     let dragStartClientY
     let draggedItem
 
@@ -137,6 +139,7 @@ export const handleAddAnswer = () => {
             const questionId = e.target.getAttribute('data-id');
             const answerContainer = document.querySelector(`#answers-${questionId}`)
 
+
             if (answerContainer.children.length < 8) {
                 let id = 0
                 if (answerContainer.children.length > 0) {
@@ -157,6 +160,7 @@ export const handleAddQuestion = () => {
 
     addQuestionBtnElements.addEventListener('click', (e) => {
         const questionContainer = document.querySelector("#accordion");
+        closeAllCollapse()
 
         if (questionContainer.children.length < 30) {
             let id = 0
@@ -207,7 +211,6 @@ const closeAllCollapse = () => {
 }
 
 export const handleValidButton = (id) => {
-    const form = document.querySelector('#quizz-form')
     const validButton = document.querySelector('#valid-btn')
     let result, message
     validButton.addEventListener('click', async () => {

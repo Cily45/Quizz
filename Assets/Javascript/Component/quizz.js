@@ -3,12 +3,16 @@ export const getQuestion = (questions) => {
 
     for (let i = 0; i < questions.length; i++) {
         result += `
-                <div id="question-${i}-content" class="d-none">
+                <div id="question-${i}-content" class="question d-none">
                     <form id="form-question-${i}">
                         <div class="mb-3">
                             <h2>${i + 1}) ${questions[i].question}</h2>
-                        </div> ${questions[i].isMultipleCorrectAnswer === 0 ?
-            getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
+                        </div> 
+                        <div class="user-answer">
+                            ${questions[i].isMultipleCorrectAnswer === 0 ?
+                                getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
+                        </div>
+                 
                     </form>
                 </div>`
     }
@@ -51,16 +55,18 @@ export const changeQuestion = (currentQuestion, nextQuestion) => {
     document.querySelector(`#question-${currentQuestion}-content`).classList.add('d-none')
 }
 
-export const displayResultQuizz = (score, answersCount, id) => {
+export const displayResultQuizz = (score, answersCount, id, questions) => {
     const result = document.querySelector("#result")
     document.querySelector('#btn').innerHTML = ""
     result.innerHTML = `
-            <h1>Votre scores est de ${score}</h1>
+            <h1 class="text-center">Votre scores est de ${score}</h1>
             <div style="width: 50%; margin: auto; text-align: center;">
                 <canvas id="my-chart" width="400" height="400"></canvas>
             </div>
-            <div class="mt-3 d-flex justify-content-end">
-                <a href="http://127.0.0.1/quizz/index.php?component=quizz&id=${id}" type="button" class="btn btn-primary" id="add-question">Recommencer</a>
+            
+            <div class="mt-3 d-flex justify-content-around">
+                <a href="#" type="button" class="btn btn-primary" id="correction-btn">Correction</a>
+                <a href="http://127.0.0.1/quizz/index.php?component=quizz&id=${id}" type="button" class="btn btn-primary">Recommencer</a>
             </div>`
 
     const chart = document.querySelector("#my-chart")
@@ -74,6 +80,8 @@ export const displayResultQuizz = (score, answersCount, id) => {
             }]
         },
     });
+
+    handleCorrection(questions)
 }
 
 
@@ -133,9 +141,63 @@ export const isChecked = (currentQuestion) => {
 export const sumScore = (scoreCount) => {
     let result = 0;
 
-    for(let i= 0 ; i < scoreCount.length; i++){
+    for (let i = 0; i < scoreCount.length; i++) {
         result += scoreCount[i]
     }
 
     return result
 }
+const handleCorrection = (questions) => {
+    const correctionButton = document.querySelector('#correction-btn')
+
+    answersCorrection(questions)
+
+    correctionButton.addEventListener('click', (e) => {
+        const questionElements = document.querySelectorAll(".question")
+e.preventDefault()
+        for (let i = 0; i < questionElements.length; i++) {
+            questionElements[i].classList.remove("d-none")
+        }
+
+
+        questionElements[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
+
+    })
+}
+
+const answerDnone = () =>{
+    const answersUser = document.querySelectorAll('.user-answer')
+
+    for(let i = 0 ; i  < answersUser.length; i++){
+        answersUser[i].classList.add('d-none')
+    }
+}
+const answersCorrection = (questions) => {
+    const questionElements = document.querySelectorAll(".question")
+    answerDnone()
+
+    for (let i = 0; i < questionElements.length; i++) {
+        const checkElements = document.querySelectorAll(`input[name="question-${i}"]`);
+        const answers = questions[i].answers
+        const newAnswers = document.createElement('ul')
+        newAnswers.classList.add('list-group')
+
+        for (let j = 0; j < checkElements.length; j++) {
+            newAnswers.innerHTML +=`
+                   <li class="list-group-item ms-5"  
+                       style="color:${checkElements[j].checked && answers[j].isCorrect === 1 ? 
+                                         "red" : answers[j].isCorrect === 0 && checkElements[j].checked ? 
+                                         "LimeGreen" : !checkElements[j].checked && answers[j].isCorrect === 0 ?
+                                         "LightGreen" : "" };"> 
+                       
+                                <i class="fa-regular fa-square${checkElements[j].checked ? "-check" : ""}"></i>
+                        ${answers[j].answer} 
+                   </li>
+                `
+
+
+        }
+        questionElements[i].appendChild(newAnswers)
+    }
+}
+

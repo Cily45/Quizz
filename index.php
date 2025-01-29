@@ -21,9 +21,13 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
             $componentName = !empty($_GET['component']) ?
                 htmlspecialchars($_GET['component'], ENT_QUOTES, 'UTF-8')
                 : 'quizzsAdmin';
-            if (file_exists("Controller/$componentName.php")) {
+            if (file_exists("Controller/$componentName.php") && str_contains($_GET['component'], "Admin")) {
                 require "Controller/$componentName.php";
+            }else{
+                require "Controller/quizzsAdmin.php";
             }
+        }else{
+            require "Controller/quizzsAdmin.php";
         }
     } elseif (isset($_GET['component'])) {
         $componentName = !empty($_GET['component']) ?
@@ -34,8 +38,10 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
             htmlspecialchars($_GET['action'], ENT_QUOTES, 'UTF-8')
             : null;
 
-        if (file_exists("Controller/$componentName.php")) {
+        if (file_exists("Controller/$componentName.php") && !str_contains($_GET['component'], "Admin")) {
             require "Controller/$componentName.php";
+        }else{
+            require "Controller/quizzs.php";
         }
     } else {
         require "Controller/quizzs.php";
@@ -50,8 +56,8 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     <meta charset="UTF-8">
     <title>Quizz</title>
 
-    <link href="Includes/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="Includes/fontawesome/fontawesome-free-6.7.1-web/css/all.min.css" />
+    <link href="includes/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="includes/fontawesome/fontawesome-free-6.7.1-web/css/all.min.css" />
 
 
     <style>
@@ -65,14 +71,32 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     <?php
     require "_Partials/navbar.php";
 
-    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = "XMLHttpRequest";
-    }
+    if (isset($_SESSION['auth'])) {
+        if (isset($_GET['component'])) {
+            $componentName = !empty($_GET['component']) ?
+                htmlspecialchars($_GET['component'], ENT_QUOTES, 'UTF-8')
+                : 'quizzsAdmin';
+            if (file_exists("Controller/$componentName.php") && str_contains($_GET['component'], "Admin")) {
+                require "Controller/$componentName.php";
+            }else{
+                require "Controller/quizzsAdmin.php";
+            }
+        }else{
+            require "Controller/quizzsAdmin.php";
+        }
+    } elseif (isset($_GET['component'])) {
+        $componentName = !empty($_GET['component']) ?
+            htmlspecialchars($_GET['component'], ENT_QUOTES, 'UTF-8')
+            : 'quizzs';
 
-    if (isset($_GET['component'])) {
-        $componentName = cleanString($_GET['component']);
-        if (file_exists("Controller/$componentName.php")) {
+        $actionName = !empty($_GET['action']) ?
+            htmlspecialchars($_GET['action'], ENT_QUOTES, 'UTF-8')
+            : null;
+
+        if (file_exists("Controller/$componentName.php") && !str_contains($_GET['component'], "Admin")) {
             require "Controller/$componentName.php";
+        }else{
+            require "Controller/quizzs.php";
         }
     } else {
         require "Controller/quizzs.php";
@@ -82,6 +106,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
 </div>
 <?php require "_partials/_toast.html"; ?>
 <script src="Includes/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 <script src="Includes/chart.js"></script>
 
 </body>

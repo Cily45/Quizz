@@ -67,7 +67,7 @@
 
             if (currentQuestion === countQuestions) {
                 document.querySelector(`#question-${currentQuestion - 1}-content`).classList.add('d-none')
-                displayResultQuizz(sumScore(scoreCount), getResult(scoreCount), id)
+                displayResultQuizz(sumScore(scoreCount), getResult(scoreCount), id, questions)
             } else {
                 changeQuestion(currentQuestion - 1, currentQuestion)
             }
