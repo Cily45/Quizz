@@ -69,7 +69,6 @@
             data = await getQuizzAdmin(id)
             quizzName.setAttribute('value', data.quizz[0].name)
             const questions = JSON.parse(data.quizz[0].questions)
-
             for (let i = 0; i < questions.length; i++) {
                 const answers = questions[i].answers
                 accordionElement.appendChild(getAccordion(questions[i].question, countQuestion))
@@ -81,6 +80,7 @@
 
                 countQuestion++
             }
+                    console.log(data)
         }else{
             addNewQuestion()
         }

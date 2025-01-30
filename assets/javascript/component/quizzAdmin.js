@@ -12,7 +12,7 @@ export const getAccordion = (question, questionId) => {
     newQuestionElement.innerHTML = ` 
                 <h2 class="accordion-header" >    
                     <div class="d-flex justify-content-xxl-between m-3">
-                        <div class="questions" id="question-${questionId}">
+                        <div class="questions-accordion" id="question-${questionId}">
                             ${question === "" ? "Entrez votre Question" : question}
                         </div>
                         <div >
@@ -312,7 +312,7 @@ export const handleValidButton = (id) => {
                 if (score > 0) {
                     countGoodAnswer++
                 }
-                scoreTotal += score
+                scoreTotal += parseInt(score)
             }
 
             questionsData.push({
@@ -348,6 +348,7 @@ export const handleValidButton = (id) => {
     })
 
 }
+
 
 export const handleGoodAnswersCheck = () => {
     const accordionElement = document.querySelector(".accordion")

@@ -40,7 +40,8 @@ function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $ques
     return true;
 }
 
-function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, string $questions, int $maxScore){
+function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, string $questions, int $maxScore): bool|array
+{
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $query="UPDATE quizz SET name = :name, is_published = :is_published, questions = :questions, max_score = :maxScore WHERE id = :id";
