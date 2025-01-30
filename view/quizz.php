@@ -1,8 +1,8 @@
 <?php
 ?>
 <div class="container">
-    <h1 class="text-center" id="title-quizz">Quizz</h1>
-    <div class="progress m-3" id="progress-bar" role="progressbar" aria-label="Info example" aria-valuenow="0"
+    <h1 class="text-center m-3" id="title-quizz">Quizz</h1>
+    <div class="progress m-4" id="progress-bar" role="progressbar" aria-label="Info example" aria-valuenow="0"
          aria-valuemin="0" aria-valuemax="100">
         <div class="progress-bar" id="progress-bar-text" style="width: 0%">0%</div>
     </div>

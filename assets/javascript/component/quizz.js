@@ -3,16 +3,15 @@ export const getQuestion = (questions) => {
 
     for (let i = 0; i < questions.length; i++) {
         result += `
-                <div id="question-${i}-content" class="question d-none">
+                <div id="question-${i}-content" class="question d-none p-3">
                     <form id="form-question-${i}">
                         <div class="mb-3">
                             <h2>${i + 1}) ${questions[i].question}</h2>
                         </div> 
                         <div class="user-answer">
                             ${questions[i].isMultipleCorrectAnswer === 0 ?
-            getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
+                                    getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
                         </div>
-                 
                     </form>
                 </div>`
     }
@@ -60,7 +59,7 @@ export const displayResultQuizz = (score, answersCount, id, questions) => {
     document.querySelector('#btn').innerHTML = ""
     result.innerHTML = `
             <h1 class="text-center">Votre scores est de ${score}</h1>
-            <div style="width: 50%; margin: auto; text-align: center;">
+            <div style="width: 30%; margin: auto; text-align: center;">
                 <canvas id="my-chart" width="400" height="400"></canvas>
             </div>
             
@@ -187,8 +186,8 @@ const answersCorrection = (questions) => {
                    <li class="list-group-item ms-5"  
                        style="color:${checkElements[j].checked && answers[j].isCorrect === 1 ?
                 "red" : answers[j].isCorrect === 0 && checkElements[j].checked ?
-                    "LimeGreen" : !checkElements[j].checked && answers[j].isCorrect === 0 ?
-                        "LightGreen" : ""};"> 
+                    "DarkGreen" : !checkElements[j].checked && answers[j].isCorrect === 0 ?
+                        "OrangeRed" : ""}"> 
                        
                                 <i class="fa-regular fa-square${checkElements[j].checked ? "-check" : ""}"></i>
                         ${answers[j].answer} 

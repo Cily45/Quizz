@@ -51,7 +51,8 @@
         handleAddQuestion,
         handleGoodAnswersCheck,
         handleGoodAnswersInput,
-        handleInput
+        handleInput,
+        addNewQuestion
     }
         from "./assets/javascript/component/quizzAdmin.js";
 
@@ -81,7 +82,7 @@
                 countQuestion++
             }
         }else{
-            accordionElement.appendChild(getAccordion( "", 0))
+            addNewQuestion()
         }
         handleInput()
         handleAddAnswer()

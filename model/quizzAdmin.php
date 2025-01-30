@@ -42,14 +42,14 @@ function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $ques
 function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, string $questions){
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query="UPDATE quizz SET id = :id, name = :name, is_published = :is_published, questions = :questions WHERE id = :id";
+    $query="UPDATE quizz SET name = :name, is_published = :is_published, questions = :questions WHERE id = :id";
 
     $prep = $pdo->prepare($query);
 
     $prep->bindValue(':id', $id, PDO::PARAM_INT);
-    $prep->bindValue(':name', $name,);
-    $prep->bindValue(':is_published', $isPublished,);
-    $prep->bindValue(':questions', $questions,);
+    $prep->bindValue(':name', $name, PDO::PARAM_STR);
+    $prep->bindValue(':is_published', $isPublished, PDO::PARAM_INT);
+    $prep->bindValue(':questions', $questions, PDO::PARAM_STR);
 
     try
     {

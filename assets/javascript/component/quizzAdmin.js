@@ -160,31 +160,35 @@ export const handleAddQuestion = () => {
     const addQuestionBtnElements = document.querySelector("#add-question-btn")
 
     addQuestionBtnElements.addEventListener('click', (e) => {
-        const questionContainer = document.querySelector("#accordion")
-        closeAllCollapse()
-
-        if (questionContainer.children.length < 30) {
-            let id = 0
-
-            if (questionContainer.children.length > 0) {
-                const idLastAnswer = questionContainer.lastChild.getAttribute('id').split('-')
-                id = parseInt(idLastAnswer[idLastAnswer.length - 1]) + 1
-            }
-            const newQuestion = getAccordion("", id)
-            questionContainer.appendChild(newQuestion)
-
-            const answerContainer = document.querySelector(`#answers-${id}`)
-            const newAnswerElement = document.createElement('div')
-            newAnswerElement.appendChild(getAnswer("", id, 0))
-
-            answerContainer.appendChild(newAnswerElement.firstChild)
-
-            e.preventDefault()
-            const question = document.querySelector(`#collapse-${id}`)
-            question.classList.add('show')
-            question.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'})
-        }
+        e.preventDefault()
+        addNewQuestion()
     })
+}
+
+export const addNewQuestion = () => {
+    const questionContainer = document.querySelector("#accordion")
+    closeAllCollapse()
+
+    if (questionContainer.children.length < 30) {
+        let id = 0
+
+        if (questionContainer.children.length > 0) {
+            const idLastAnswer = questionContainer.lastChild.getAttribute('id').split('-')
+            id = parseInt(idLastAnswer[idLastAnswer.length - 1]) + 1
+        }
+        const newQuestion = getAccordion("", id)
+        questionContainer.appendChild(newQuestion)
+
+        const answerContainer = document.querySelector(`#answers-${id}`)
+        const newAnswerElement = document.createElement('div')
+        newAnswerElement.appendChild(getAnswer("", id, 0))
+
+        answerContainer.appendChild(newAnswerElement.firstChild)
+
+        const question = document.querySelector(`#collapse-${id}`)
+        question.classList.add('show')
+        question.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'})
+    }
 }
 export const handleRemoveQuestion = () => {
     const accordionElement = document.querySelector("#accordion");
@@ -375,26 +379,22 @@ export const isMinimunQuestionCorrect = () => {
 export const handleInput = () => {
     const accordionElement = document.querySelector("#accordion");
 
-     accordionElement.addEventListener('click', (e) => {
-         if (e.target.closest('.form-control')) {
-             e.target.addEventListener('focusin', () => {
-                 document.querySelectorAll('.accordion-item').forEach(bloc => {
-                     bloc.setAttribute('draggable', false)
-                 })
-             })
+    accordionElement.addEventListener('click', (e) => {
+        if (e.target.closest('.form-control')) {
+            e.target.addEventListener('focusin', () => {
+                document.querySelectorAll('.accordion-item').forEach(bloc => {
+                    bloc.setAttribute('draggable', false)
+                })
+            })
 
-             e.target.addEventListener('focusout', () => {
-                 document.querySelectorAll('.accordion-item').forEach(bloc => {
-                     bloc.setAttribute('draggable', true)
-                     if(e.target.classList.value.includes("questions")) {
-                         document.querySelector(`#question-${e.target.getAttribute("data-id")}`).innerHTML = e.target.value
-                     }
-                 })
-             })
-         }
-     })
+            e.target.addEventListener('focusout', () => {
+                document.querySelectorAll('.accordion-item').forEach(bloc => {
+                    bloc.setAttribute('draggable', true)
+                    if(e.target.classList.value.includes("questions")) {
+                        document.querySelector(`#question-${e.target.getAttribute("data-id")}`).innerHTML = e.target.value
+                    }
+                })
+            })
+        }
+    })
 }
-
-
-
-

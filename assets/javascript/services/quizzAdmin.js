@@ -62,7 +62,7 @@ export const updateQuizz = async (data, id) => {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         },
-        method: 'POST',
+       method: 'POST',
         body: JSON.stringify(data)
     })
 
