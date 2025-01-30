@@ -65,9 +65,10 @@
             updateProgressBar(progressCount)
             scoreCount[currentQuestion - 1] = countScore(questions[currentQuestion - 1].answers, currentQuestion - 1)
 
+
             if (currentQuestion === countQuestions) {
                 document.querySelector(`#question-${currentQuestion - 1}-content`).classList.add('d-none')
-                displayResultQuizz(sumScore(scoreCount), getResult(scoreCount), id, questions)
+                displayResultQuizz(sumScore(scoreCount), getResult(scoreCount), id, questions, data.quizz[0].max_score)
             } else {
                 changeQuestion(currentQuestion - 1, currentQuestion)
             }

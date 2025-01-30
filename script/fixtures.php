@@ -12,6 +12,7 @@ $faker = Faker\Factory::create('fr_FR');
 for ($i = 0; $i < 100; $i++) {
     $questions = [];
     $quantityQuestion = rand(2, 20);
+    $maxScore = 0;
 
     for ($j = 0; $j < $quantityQuestion; $j++) {
         $question = $faker->sentence();
@@ -22,6 +23,7 @@ for ($i = 0; $i < 100; $i++) {
         for ($k = 0; $k < $answerQuantity; $k++) {
             $isCorrectAnswer = ($k === $answerQuantity-1 && $countGoodAnswer === 0) ? 0 : rand(0,1);
             $scoreAnswer = $isCorrectAnswer === 0 ? rand(1,3) : 0;
+            $maxScore += $scoreAnswer;
             $answers[] = ["answer" => $faker->sentence(rand(1, 5)), "score" => $scoreAnswer, "isCorrect" => $scoreAnswer === 0 ? 1 : 0];
             if($isCorrectAnswer === 0 ) {
                 $countGoodAnswer++;
@@ -34,11 +36,12 @@ for ($i = 0; $i < 100; $i++) {
 
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $state = $pdo->prepare("INSERT INTO quizz(`name`, `is_published`, `questions`) VALUES(:name, :isPublished, :questions)");
+    $state = $pdo->prepare("INSERT INTO quizz(`name`, `is_published`, `questions`, `max_score`) VALUES(:name, :isPublished, :questions, :maxScore)");
 
     $state->bindValue(':name', $faker->sentence(rand(2, 5)));
     $state->bindValue(':isPublished', rand(0, 1));
     $state->bindValue(':questions', json_encode($questions));
+    $state->bindValue(':maxScore', $maxScore);
 
     try {
         $state->execute();

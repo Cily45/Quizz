@@ -54,11 +54,11 @@ export const changeQuestion = (currentQuestion, nextQuestion) => {
     document.querySelector(`#question-${currentQuestion}-content`).classList.add('d-none')
 }
 
-export const displayResultQuizz = (score, answersCount, id, questions) => {
+export const displayResultQuizz = (score, answersCount, id, questions, scoreTotal) => {
     const result = document.querySelector("#result")
     document.querySelector('#btn').innerHTML = ""
     result.innerHTML = `
-            <h1 class="text-center">Votre scores est de ${score}</h1>
+            <h1 class="text-center">Votre scores est de ${score} sur ${scoreTotal}</h1>
             <div style="width: 30%; margin: auto; text-align: center;">
                 <canvas id="my-chart" width="400" height="400"></canvas>
             </div>
@@ -185,9 +185,10 @@ const answersCorrection = (questions) => {
             newAnswers.innerHTML += `
                    <li class="list-group-item ms-5"  
                        style="color:${checkElements[j].checked && answers[j].isCorrect === 1 ?
-                "red" : answers[j].isCorrect === 0 && checkElements[j].checked ?
-                    "DarkGreen" : !checkElements[j].checked && answers[j].isCorrect === 0 ?
-                        "OrangeRed" : ""}"> 
+                            "red" : answers[j].isCorrect === 0 && checkElements[j].checked ?
+                                    "DarkGreen" : 
+                                    !checkElements[j].checked && answers[j].isCorrect === 0 ?
+                                        "DarkOrange" : ""}"> 
                        
                                 <i class="fa-regular fa-square${checkElements[j].checked ? "-check" : ""}"></i>
                         ${answers[j].answer} 

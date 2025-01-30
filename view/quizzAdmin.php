@@ -84,6 +84,7 @@
         }else{
             addNewQuestion()
         }
+
         handleInput()
         handleAddAnswer()
         handleRemoveQuestion()

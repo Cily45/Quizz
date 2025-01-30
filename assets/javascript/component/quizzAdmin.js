@@ -7,11 +7,12 @@ export const getAccordion = (question, questionId) => {
     newQuestionElement.classList.add("accordion-item")
     newQuestionElement.classList.add("list-group-item")
     newQuestionElement.setAttribute('id', `accordion-${questionId}`)
+    newQuestionElement.setAttribute('data-id', questionId);
     newQuestionElement.setAttribute("draggable", "true")
     newQuestionElement.innerHTML = ` 
                 <h2 class="accordion-header" >    
                     <div class="d-flex justify-content-xxl-between m-3">
-                        <div id="question-${questionId}">
+                        <div class="questions" id="question-${questionId}">
                             ${question === "" ? "Entrez votre Question" : question}
                         </div>
                         <div >
@@ -79,19 +80,27 @@ export const getAnswer = (answer, questionId, answerId) => {
     return newAnswerElement
 }
 export const handleChevron = () => {
+    const accordionItems = document.querySelectorAll('.accordion')
     const collapseButton = document.querySelectorAll(".collapse-btn")
 
-    for (let i = 0; i < collapseButton.length; i++) {
-        collapseButton[i].addEventListener('click', (e) => {
-            closeAllCollapse()
-
-            collapseButton[i].innerHTML = collapseButton[i].innerHTML === `<i class="fa-solid fa-chevron-up"></i>`
-                ? `<i class="fa-solid fa-chevron-down"></i>` : `<i class="fa-solid fa-chevron-up"></i>`
+    for (let i = 0; i < accordionItems.length; i++) {
+        accordionItems[i].addEventListener('click', (e) => {
+            if (e.target.closest(".collapse-btn")) {
+                const target = e.target
+                closeAllCollapse(target.parentElement.getAttribute("data-bs-target"))
+                if (target.classList.contains(`fa-chevron-up`)) {
+                    e.target.classList.remove(`fa-chevron-up`)
+                    e.target.classList.add(`fa-chevron-down`)
+                } else {
+                    e.target.classList.remove(`fa-chevron-down`)
+                    e.target.classList.add(`fa-chevron-up`)
+                }
+            }
         })
     }
 }
 export const handleAccordion = () => {
-    const accordionItems = document.querySelectorAll('.accordion')
+    const accordionItems = document.querySelectorAll('.accordion-item')
     let dragStartClientY
     let draggedItem
 
@@ -103,24 +112,27 @@ export const handleAccordion = () => {
         draggedItem = target
         dragStartClientY = e.clientY
     }
+
     const handleDragEnd = (e) => {
         const target = e.target.closest('.accordion-item')
-
         target.style.opacity = 1
     }
+
     const handleDrop = (e) => {
         const target = e.target.closest('.accordion-item')
         if (dragStartClientY > e.clientY) {
-            target.parentNode.insertBefore(draggedItem, target.previousSibling)
+            target.parentNode.insertBefore(draggedItem, target)
         } else {
             target.parentNode.insertBefore(draggedItem, target.nextSibling)
-
         }
+        draggedItem.style.opacity = 1
         draggedItem = null
+        target.style.backgroundColor = ''
+
     }
+
     const handleDragOver = (e) => {
         e.preventDefault()
-
     }
 
     for (let i = 0; i < accordionItems.length; i++) {
@@ -131,6 +143,7 @@ export const handleAccordion = () => {
     }
 }
 
+
 export const handleAddAnswer = () => {
     const accordionElement = document.querySelector("#accordion");
 
@@ -138,7 +151,6 @@ export const handleAddAnswer = () => {
         if (e.target.closest('.add-answer-btn')) {
             const questionId = e.target.getAttribute('data-id');
             const answerContainer = document.querySelector(`#answers-${questionId}`)
-
 
             if (answerContainer.children.length < 8) {
                 let id = 0
@@ -167,15 +179,11 @@ export const handleAddQuestion = () => {
 
 export const addNewQuestion = () => {
     const questionContainer = document.querySelector("#accordion")
-    closeAllCollapse()
+    closeAllCollapse(null)
 
     if (questionContainer.children.length < 30) {
-        let id = 0
+        let id = questionContainer.children.length > 0 ? parseInt(maxId()) + 1 : 0
 
-        if (questionContainer.children.length > 0) {
-            const idLastAnswer = questionContainer.lastChild.getAttribute('id').split('-')
-            id = parseInt(idLastAnswer[idLastAnswer.length - 1]) + 1
-        }
         const newQuestion = getAccordion("", id)
         questionContainer.appendChild(newQuestion)
 
@@ -189,6 +197,20 @@ export const addNewQuestion = () => {
         question.classList.add('show')
         question.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'})
     }
+}
+
+const maxId = () => {
+    const acordionElements = document.querySelectorAll(".accordion-item")
+    let maxId = 0
+    for (let i = 0; i < acordionElements.length; i++) {
+        const currentId = parseInt(acordionElements[i].getAttribute('data-id'))
+        if (currentId > maxId) {
+            maxId = acordionElements[i].getAttribute('data-id')
+        }
+    }
+    console.log(maxId)
+    return maxId
+
 }
 export const handleRemoveQuestion = () => {
     const accordionElement = document.querySelector("#accordion");
@@ -213,17 +235,22 @@ export const handleRemoveAnswer = () => {
 };
 
 
-const closeAllCollapse = () => {
+const closeAllCollapse = (dataTarget) => {
     const collapseAccordionElements = document.querySelectorAll(".accordion-collapse")
     const accordionButtonElements = document.querySelectorAll('.accordion-header')
+    const collapseButtonElements = document.querySelectorAll(".collapse-btn")
+
+
     for (let i = 0; i < collapseAccordionElements.length; i++) {
-        collapseAccordionElements[i].classList.remove("show")
-        accordionButtonElements[i].classList.add("collapsed")
+        if (collapseButtonElements[i].getAttribute('data-bs-target') !== dataTarget) {
+            collapseAccordionElements[i].classList.remove("show")
+            accordionButtonElements[i].classList.add("collapsed")
+            collapseButtonElements[i].firstElementChild.classList.add(`fa-chevron-down`)
+            collapseButtonElements[i].firstElementChild.classList.remove(`fa-chevron-up`)
+        }
+
     }
-    const collapseButton = document.querySelectorAll(".collapse-btn")
-    for (let i = 0; i < collapseButton.length; i++) {
-        collapseButton[i].innerHTML = `<i class="fa-solid fa-chevron-down"></i>`
-    }
+
 }
 
 export const handleValidButton = (id) => {
@@ -232,15 +259,15 @@ export const handleValidButton = (id) => {
     let result, message
 
     validButton.addEventListener('click', async () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({top: 0, behavior: 'smooth'});
 
         if (!form.checkValidity()) {
             const accordions = document.querySelectorAll('.accordion-collapse');
 
-            for(let i = 0; i < accordions.length; i++) {
+            for (let i = 0; i < accordions.length; i++) {
                 const inputs = accordions[i].querySelectorAll('input');
 
-                for(let j = 0; j < inputs.length; j++) {
+                for (let j = 0; j < inputs.length; j++) {
                     if (!inputs[j].validity.valid) {
                         accordions[i].classList.add('show');
                     }
@@ -265,11 +292,12 @@ export const handleValidButton = (id) => {
             return false
         }
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({top: 0, behavior: 'smooth'});
 
         const quizz = []
         const questionsData = []
         const questions = document.querySelectorAll(".questions")
+        let scoreTotal = 0
 
         for (let i = 0; i < questions.length; i++) {
             const answersData = []
@@ -284,6 +312,7 @@ export const handleValidButton = (id) => {
                 if (score > 0) {
                     countGoodAnswer++
                 }
+                scoreTotal += score
             }
 
             questionsData.push({
@@ -297,7 +326,8 @@ export const handleValidButton = (id) => {
             "id": parseInt(id),
             "name": document.querySelector('#quizz-name').value,
             "is_published": document.querySelector('#flexCheckPublished').checked ? 0 : 1,
-            "questions": JSON.stringify(questionsData)
+            "questions": JSON.stringify(questionsData),
+            "score": scoreTotal
         })
 
         const data = {quizz}
@@ -344,7 +374,7 @@ export const handleGoodAnswersInput = () => {
     });
 }
 
-export const isMinimunAnswerCorrect = () => {
+ const isMinimunAnswerCorrect = () => {
     const answers = document.querySelectorAll('.answers')
 
     for (let i = 0; i < answers.length; i++) {
@@ -354,7 +384,7 @@ export const isMinimunAnswerCorrect = () => {
     }
     return true
 }
-export const isMinimunGoodAnswerCorrect = () => {
+ const isMinimunGoodAnswerCorrect = () => {
     const answers = document.querySelectorAll('.answers')
     for (let i = 0; i < answers.length; i++) {
         let quantityGoodAnswer = 0
@@ -370,7 +400,7 @@ export const isMinimunGoodAnswerCorrect = () => {
     return true
 }
 
-export const isMinimunQuestionCorrect = () => {
+ const isMinimunQuestionCorrect = () => {
     const questions = document.querySelector('#accordion')
 
     return questions.children.length >= 1
@@ -386,13 +416,16 @@ export const handleInput = () => {
                     bloc.setAttribute('draggable', false)
                 })
             })
+            if (e.target.classList.value.includes("questions")) {
+                e.target.addEventListener('input', () => {
+                    document.querySelector(`#question-${e.target.getAttribute("data-id")}`).innerHTML = e.target.value
+                })
+            }
 
             e.target.addEventListener('focusout', () => {
                 document.querySelectorAll('.accordion-item').forEach(bloc => {
                     bloc.setAttribute('draggable', true)
-                    if(e.target.classList.value.includes("questions")) {
-                        document.querySelector(`#question-${e.target.getAttribute("data-id")}`).innerHTML = e.target.value
-                    }
+
                 })
             })
         }
