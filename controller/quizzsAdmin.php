@@ -35,19 +35,20 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
 
             default:
                 break;
-        }}
-
+        }
+    }
 
     $page = isset($_GET['page']) ? cleanString($_GET['page']) : null;
     $sortby = isset($_GET['sortby']) ? cleanString($_GET['sortby']) : null;
     $countPersons = getCountQuizzsAdmin($pdo);
-    $quizzs = getAllQuizzsAdmin($pdo,$page,$sortby);
+    $quizzs = getAllQuizzsAdmin($pdo, $page, $sortby);
 
     if (!is_array($quizzs)) {
         $errors[] = $quizzs;
     }
 
     header('Content-Type: application/json');
+
     echo json_encode(
         [
             'quizzCount' => $countPersons,
@@ -58,4 +59,5 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     );
     exit();
 }
+
 require 'view/quizzsAdmin.php';

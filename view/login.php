@@ -1,4 +1,3 @@
-
 <form id="login-form">
     <div class="mb-3">
         <label for="username" class="form-label">Username</label>
@@ -28,11 +27,13 @@
             }
 
             const loginResult = await login(formLogin.elements['username'].value, formLogin.elements['password'].value)
+
             if (loginResult.hasOwnProperty('authentication')) {
                 document.location.href = 'index.php?component=quizzsAdmin'
             } else if (loginResult.hasOwnProperty('errors')) {
                 showToast(loginResult.errors[1].toString(), 'bg-danger')
             }
+
         })
     })
 </script>

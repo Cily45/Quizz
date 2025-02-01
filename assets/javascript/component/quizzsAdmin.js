@@ -44,10 +44,12 @@ export const handlePaginationNavigation = (page, sortBy) => {
     const paginationBtns = document.querySelectorAll('.change-page')
 
     previousPage.addEventListener('click', async () => {
+
         if (page > 1) {
             page--
             await displayQuizzs(page, sortBy)
         }
+
     })
 
     for (let i = 0; i < paginationBtns.length; i++) {
@@ -88,23 +90,28 @@ export const getPagination = (total, page) => {
 export const getRow = (quizz) => {
     return `
             <tr>
-            <th scope="row">${quizz.id}</th>
-            <td>${quizz.name}</td>
-            <td><a href="#">
-                <i class="btn-published ${quizz.is_published === 0 ? 
-                                            "fa-regular fa-eye text-success" : 
-                                            "fa-regular fa-eye-slash text-danger"}" data-id=${quizz.id}></i></a>
-                <div class="spinner-border spinner-border-sm d-none" role="status" id="published-spinner-${quizz.id}">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </td>
-            <td><button type="button" class="btn btn-outline-danger btn-delete" data-id=${quizz.id}>Supprimer</button>
+                <th scope="row">${quizz.id}</th>
+                <td>${quizz.name}</td>
+                <td><a href="#">
+                    <i class="btn-published ${quizz.is_published === 0 ?
+                                            "fa-regular fa-eye text-success" :
+                                            "fa-regular fa-eye-slash text-danger"}" 
+                       data-id=${quizz.id}></i>
+                    </a>
+                    <div class="spinner-border spinner-border-sm d-none" role="status" id="published-spinner-${quizz.id}">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-danger btn-delete" data-id=${quizz.id}>Supprimer</button>
                     <div class="spinner-border spinner-border-sm d-none" role="status" id="delete-spinner-${quizz.id}">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-            </td>
-    <td><button type="button" class="btn btn-primary update-btn" data-id=${quizz.id}>Modifier</button></td>
-    </tr>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary update-btn" data-id=${quizz.id}>Modifier</button>
+                </td>
+            </tr>
     `
 }
 
@@ -119,6 +126,7 @@ export const handlePublishedClick = (page, sortBy) => {
             const result = await updateIsPublishedQuizz(page, sortBy, id)
 
             if (result.hasOwnProperty('success')) {
+
                 if (e.target.classList.contains('fa-check')) {
                     e.target.classList.remove('fa-check', 'text-success')
                     e.target.classList.add('fa-xmark', 'text-danger')
@@ -126,10 +134,12 @@ export const handlePublishedClick = (page, sortBy) => {
                     e.target.classList.add('fa-check', 'text-success')
                     e.target.classList.remove('fa-xmark', 'text-danger')
                 }
+
                 showToast('La publication du quizz a été modifé avec succès', 'bg-success')
             } else {
                 showToast(result.error, 'bg-danger')
             }
+
             spinner.classList.add('d-none')
             await displayQuizzs(page, sortBy)
         })
@@ -158,6 +168,7 @@ export const handleDeleteClick = (page, sortBy) => {
 
                 await displayQuizzs(page, sortBy)
             }
+
         })
     }
 }

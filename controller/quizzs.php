@@ -7,9 +7,9 @@ require 'model/quizzs.php';
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === "XMLHttpRequest") {
     $page = isset($_GET['page']) ? cleanString($_GET['page']) : null;
     $countPersons = getCountQuizzs($pdo);
-    $quizzs = getAll($pdo,$page);
+    $quizzs = getAll($pdo, $page);
 
-    if(!is_array($quizzs)){
+    if (!is_array($quizzs)) {
         $errors[] = $quizzs;
     }
 

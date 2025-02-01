@@ -33,7 +33,6 @@ for ($i = 0; $i < 50; $i++) {
         }
 
         $questions[] = ["question" => $question, "isMultipleCorrectAnswer" => $countGoodAnswer > 1 ? 0 : 1, "answers" => $answers];
-
     }
 
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -51,8 +50,10 @@ for ($i = 0; $i < 50; $i++) {
     } catch (PDOException $e) {
         echo "Erreur à la création du quizz {$e->getMessage()}";
     }
+
     $id = $pdo->lastInsertId();
     $state->closeCursor();
+
     if ($isChrono === 0) {
         $quizzIdIsChrono[] = $id;
     }
@@ -60,6 +61,7 @@ for ($i = 0; $i < 50; $i++) {
 }
 
 $times = [];
+
 for ($i = 0; $i < count($quizzIdIsChrono); $i++) {
     $quizzId = $quizzIdIsChrono[$i];
     $averageTimes = 0;
@@ -68,6 +70,7 @@ for ($i = 0; $i < count($quizzIdIsChrono); $i++) {
     $min = null;
 
     if ($numberTimes > 0) {
+
         for ($j = 0; $j < $numberTimes; $j++) {
             $time = rand(20, 4000);
 
@@ -93,6 +96,7 @@ for ($i = 0; $i < count($quizzIdIsChrono); $i++) {
             if ($min === null) {
                 $min = $time;
             }
+
             if ($time < $min) {
                 $min = $time;
             }

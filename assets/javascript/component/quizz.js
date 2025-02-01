@@ -14,7 +14,7 @@ export const getQuestion = (questions) => {
                         </div> 
                         <div class="user-answer">
                             ${parseInt(questions[i].isMultipleCorrectAnswer) === 0 ?
-                                    getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
+            getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
                         </div>
                     </form>
                 </div>`
@@ -71,7 +71,7 @@ export const displayResultQuizz = async (score, answersCount, id, questions, sco
             
             <div class="mt-3 d-flex justify-content-around">
                 <a href="#" type="button" class="btn btn-primary" id="correction-btn">Correction</a>
-                <a href="http://127.0.0.1/quizz/index.php?component=quizz&id=${id}" type="button" class="btn btn-primary">Recommencer</a>
+                <a href="index.php?component=quizz&id=${id}" type="button" class="btn btn-primary">Recommencer</a>
             </div>`
 
     const chart = document.querySelector("#my-chart")
@@ -85,11 +85,12 @@ export const displayResultQuizz = async (score, answersCount, id, questions, sco
             }]
         },
     });
+
     let res = await addTime(id, time)
 
     if (res.hasOwnProperty('bestTime')) {
         showToast("Vous venez de faire le meilleur temps!!!", 'bg-success')
-    } else if(res.hasOwnProperty('success') ){
+    } else if (res.hasOwnProperty('success')) {
         showToast("Votre temps à bien été pris en compte", 'bg-success')
     } else {
         showToast(`Une erreur a été rencontrée: ${result.error}`, 'bg-danger')
@@ -115,13 +116,14 @@ export const countScore = (answers, currentQuestion) => {
         if (checkboxes[i].checked && parseInt(answers[i].isCorrect) === 1) {
             return 0
         }
-        if (!checkboxes[i].checked && parseInt(answers[i].isCorrect)=== 0) {
+        if (!checkboxes[i].checked && parseInt(answers[i].isCorrect) === 0) {
             return 0
         }
         if (parseInt(answers[i].isCorrect) === 0) {
             countScore += parseInt(answers[i].score)
         }
     }
+
     return countScore
 }
 
@@ -160,6 +162,7 @@ export const sumScore = (scoreCount) => {
 
     return result
 }
+
 const handleCorrection = (questions) => {
     const correctionButton = document.querySelector('#correction-btn')
 
@@ -185,6 +188,7 @@ const answerDnone = () => {
         answersUser[i].classList.add('d-none')
     }
 }
+
 const answersCorrection = (questions) => {
     const questionElements = document.querySelectorAll(".question")
     answerDnone()
@@ -200,11 +204,10 @@ const answersCorrection = (questions) => {
             newAnswers.innerHTML += `
                    <li class="list-group-item ms-5"  
                        style="color:${checkElements[j].checked && parseInt(answers[j].isCorrect) === 1 ?
-                            "red" : parseInt(answers[j].isCorrect) === 0 && checkElements[j].checked ?
-                                    "DarkGreen" : 
-                                    !checkElements[j].checked && parseInt(answers[j].isCorrect) === 0 ?
-                                        "DarkOrange" : ""}"> 
-                       
+                "red" : parseInt(answers[j].isCorrect) === 0 && checkElements[j].checked ?
+                    "DarkGreen" :
+                    !checkElements[j].checked && parseInt(answers[j].isCorrect) === 0 ?
+                        "DarkOrange" : ""}"> 
                                 <i class="fa-regular fa-square${checkElements[j].checked ? "-check" : ""}"></i>
                         ${answers[j].answer} 
                    </li>
@@ -215,5 +218,3 @@ const answersCorrection = (questions) => {
         questionElements[i].appendChild(newAnswers)
     }
 }
-
-

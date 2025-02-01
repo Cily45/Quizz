@@ -1,5 +1,4 @@
 export const login = async (username, password) => {
-
     const response = await fetch(`index.php?component=login`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'

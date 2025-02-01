@@ -1,5 +1,4 @@
 <?php
-
 function getAll(PDO $pdo, int $page)
 {
     $query = "SELECT * FROM quizz WHERE is_published =0";
@@ -33,4 +32,5 @@ function getCountQuizzs(PDO $pdo)
     } catch (Exception $e) {
         return $e->getMessage();
     }
+
 }

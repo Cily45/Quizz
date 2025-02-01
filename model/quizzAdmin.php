@@ -5,35 +5,33 @@ function getQuizzAdmin(PDO $pdo, int $id): array|string
     $state = $pdo->prepare("SELECT * FROM quizz WHERE id = :id");
     $state->bindParam(':id', $id, PDO::PARAM_INT);
 
-    try{
+    try {
         $state->execute();
         return $state->fetchAll(PDO::FETCH_OBJ);
-    }catch(Exception $e){
+    } catch (Exception $e) {
         return $e->getMessage();
     }
+
 }
 
 function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $questions, int $maxScore, int $isChono): array|bool
 {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query="INSERT INTO quizz (name, is_published, questions, max_score, is_chrono) VALUES (:name, :is_published, :questions, :maxScore, :isChrono)";
+    $query = "INSERT INTO quizz (name, is_published, questions, max_score, is_chrono) VALUES (:name, :is_published, :questions, :maxScore, :isChrono)";
 
     $prep = $pdo->prepare($query);
 
-    $prep->bindValue(':name', $name,);
-    $prep->bindValue(':is_published', $isPublished,);
+    $prep->bindValue(':name', $name);
+    $prep->bindValue(':is_published', $isPublished);
     $prep->bindValue(':questions', $questions);
     $prep->bindValue(':maxScore', $maxScore);
     $prep->bindValue(':isChrono', $isChono);
 
-    try
-    {
+    try {
         $prep->execute();
-    }
-    catch (PDOException $e)
-    {
-        return " erreur : ".$e->getCode() .' :</b> '. $e->getMessage();
+    } catch (PDOException $e) {
+        return " erreur : " . $e->getCode() . ' :</b> ' . $e->getMessage();
     }
 
     $prep->closeCursor();
@@ -45,7 +43,7 @@ function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, str
 {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query="UPDATE quizz SET name = :name, is_published = :is_published, questions = :questions, max_score = :maxScore, is_chrono = :isChrono WHERE id = :id";
+    $query = "UPDATE quizz SET name = :name, is_published = :is_published, questions = :questions, max_score = :maxScore, is_chrono = :isChrono WHERE id = :id";
 
     $prep = $pdo->prepare($query);
 
@@ -56,13 +54,10 @@ function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, str
     $prep->bindValue(':maxScore', $maxScore, PDO::PARAM_INT);
     $prep->bindValue(':isChrono', $isChrono, PDO::PARAM_INT);
 
-    try
-    {
+    try {
         $prep->execute();
-    }
-    catch (PDOException $e)
-    {
-        return " erreur : ".$e->getCode() .' :</b> '. $e->getMessage();
+    } catch (PDOException $e) {
+        return " erreur : " . $e->getCode() . ' :</b> ' . $e->getMessage();
     }
 
     $prep->closeCursor();

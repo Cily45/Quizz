@@ -1,5 +1,4 @@
 <?php
-
 function getAllQuizzsAdmin(PDO $pdo, int $page, string|null $sortby = null): array|string
 {
     $query = "SELECT * FROM quizz";
@@ -30,6 +29,7 @@ function getCountQuizzsAdmin(PDO $pdo)
 {
     $query = "SELECT COUNT(id) AS `idCount` FROM quizz";
     $state = $pdo->prepare($query);
+
     try {
         $state->execute();
         return $state->fetch(PDO::FETCH_ASSOC);
@@ -38,13 +38,12 @@ function getCountQuizzsAdmin(PDO $pdo)
     }
 }
 
-function deleteQuizzAdmin(PDO $pdo, int $id): true|string
+function deleteQuizzAdmin(PDO $pdo, int $id): bool|string
 {
     $state = $pdo->prepare("DELETE FROM quizz WHERE id = :id");
     $state->bindParam(':id', $id, PDO::PARAM_INT);
 
     try {
-
         $state->execute();
     } catch (PDOException $e) {
         return " erreur : " . $e->getCode() . ' ' . $e->getMessage();
@@ -53,7 +52,7 @@ function deleteQuizzAdmin(PDO $pdo, int $id): true|string
     return true;
 }
 
-function updateIsPublishedQuizzAdmin(PDO $pdo, int $id): true|string
+function updateIsPublishedQuizzAdmin(PDO $pdo, int $id): bool|string
 {
     $state = $pdo->prepare("UPDATE quizz SET is_published = NOT is_published WHERE id = :id");
     $state->bindParam(':id', $id, PDO::PARAM_INT);

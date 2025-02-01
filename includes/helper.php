@@ -1,5 +1,4 @@
 <?php
-
 function cleanString(string $value): string
 {
     return trim(htmlspecialchars($value, ENT_QUOTES));
@@ -11,6 +10,7 @@ function cleanJson($data): bool|string
     cleanArray($data);
     return json_encode($data);
 }
+
 function cleanArray(&$array): void
 {
     foreach ($array as &$item) {

@@ -17,24 +17,22 @@
             </div>
         </div>
     </div>
-    <ul class="accordion list-group" id="accordion">
-    </ul>
+    <ul class="accordion list-group" id="accordion"></ul>
     <div class="d-flex justify-content-end">
-    <div class="form-check m-3">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckPublished" checked>
-        <label class="form-check-label ms-2" for="flexCheckPublished">
-            Publier
-        </label>
-    </div>
-    <div class="form-check m-3">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckChrono" checked>
-        <label class="form-check-label ms-2" for="flexCheckChrono">
-            Chronométrer
-        </label>
-    </div>
+        <div class="form-check m-3">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckPublished" checked>
+            <label class="form-check-label ms-2" for="flexCheckPublished">
+                Publier
+            </label>
+        </div>
+        <div class="form-check m-3">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChrono" checked>
+            <label class="form-check-label ms-2" for="flexCheckChrono">
+                Chronométrer
+            </label>
+        </div>
     </div>
 </form>
-
 <div class="mb-3 ">
     <div class="row">
         <div class="mt-3 d-flex justify-content-end">
@@ -42,7 +40,6 @@
         </div>
     </div>
 </div>
-
 
 <script src="./assets/javascript/services/quizzAdmin.js" type="module"></script>
 <script type="module">
@@ -77,6 +74,7 @@
             data = await getQuizzAdmin(id)
             quizzName.setAttribute('value', data.quizz[0].name)
             const questions = JSON.parse(data.quizz[0].questions)
+
             for (let i = 0; i < questions.length; i++) {
                 const answers = questions[i].answers
                 accordionElement.appendChild(getAccordion(questions[i].question, countQuestion))
@@ -88,7 +86,7 @@
 
                 countQuestion++
             }
-        }else{
+        } else {
             addNewQuestion()
         }
 
@@ -102,7 +100,6 @@
         handleGoodAnswersInput()
         handleAccordion()
         handleChevron()
-
 
         validButton.innerHTML = id === '0' ? "Créer" : "Modifier"
     })
