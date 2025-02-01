@@ -9,14 +9,17 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
         isset($_GET['action'])
     ) {
         $action = cleanString($_GET['action']);
-        $data = json_decode(file_get_contents('php://input'));
-        $name = !empty($data->quizz[0]->name) ? cleanString($data->quizz[0]->name) : null;
-        $isPublished = !empty($data->quizz[0]->is_published) ? cleanString($data->quizz[0]->is_published) : 0;
-        $questions = !empty($data->quizz[0]->questions) ? ($data->quizz[0]->questions): null;
-        $score = !empty($data->quizz[0]->score) ? cleanString($data->quizz[0]->score) : null;
+        $data = !empty($_POST['data']) ? json_decode($_POST['data'], true): null;
+
+        $name = !empty($data['quizz'][0]['name']) ? cleanString($data['quizz'][0]['name']) : null;
+        $isPublished = !empty($data['quizz'][0]['is_published']) ? cleanString($data['quizz'][0]['is_published']) : 0;
+        $isChrono= !empty($data['quizz'][0]['is_chrono']) ? cleanString($data['quizz'][0]['is_chrono']) : 0;
+        $questions = !empty($data['quizz'][0]['questions']) ? cleanJson($data['quizz'][0]['questions']) : null;
+        $score = !empty($data['quizz'][0]['score']) ? cleanString($data['quizz'][0]['score']) : null;
+      //  var_dump($data['quizz'][0]['questions']);
         switch ($action) {
             case 'create':
-                $create = createQuizzAdmin($pdo, $name, $isPublished, $questions, $score);
+                $create = createQuizzAdmin($pdo, $name, $isPublished, $questions, $score, $isChrono);
 
                 header('Content-Type: application/json');
                 if (is_bool($create)) {
@@ -28,8 +31,8 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
                 break;
 
             case 'update':
-                $id = !empty($data->quizz[0]->id) ? cleanString($data->quizz[0]->id) : null;
-                $change = updateQuizzAdmin($pdo, $id, $name, $isPublished, $questions, $score);
+                $id = !empty($data['quizz'][0]['id']) ? cleanString($data['quizz'][0]['id']) : null;
+                $change = updateQuizzAdmin($pdo, $id, $name, $isPublished, $questions, $score, $isChrono);
 
                 header('Content-Type: application/json');
                 if (is_bool($change)) {

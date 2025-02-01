@@ -1,3 +1,6 @@
+import {formatTime} from "./shared/timer.js";
+import {addTime} from "../services/quizz.js";
+
 export const getQuestion = (questions) => {
     let result = ""
 
@@ -9,7 +12,7 @@ export const getQuestion = (questions) => {
                             <h2>${i + 1}) ${questions[i].question}</h2>
                         </div> 
                         <div class="user-answer">
-                            ${questions[i].isMultipleCorrectAnswer === 0 ?
+                            ${parseInt(questions[i].isMultipleCorrectAnswer) === 0 ?
                                     getAnswerCheck(questions[i].answers, i) : getAnswerRadio(questions[i].answers, i)}
                         </div>
                     </form>
@@ -54,11 +57,13 @@ export const changeQuestion = (currentQuestion, nextQuestion) => {
     document.querySelector(`#question-${currentQuestion}-content`).classList.add('d-none')
 }
 
-export const displayResultQuizz = (score, answersCount, id, questions, scoreTotal) => {
+export const displayResultQuizz = async (score, answersCount, id, questions, scoreTotal, time) => {
     const result = document.querySelector("#result")
+    time = Math.floor((Date.now() - time) * 0.001)
     document.querySelector('#btn').innerHTML = ""
     result.innerHTML = `
             <h1 class="text-center">Votre scores est de ${score} sur ${scoreTotal}</h1>
+            <p class="text-center">Vous avez réalisé ce quizz en : ${formatTime(time)}</p>
             <div style="width: 30%; margin: auto; text-align: center;">
                 <canvas id="my-chart" width="400" height="400"></canvas>
             </div>
@@ -79,6 +84,7 @@ export const displayResultQuizz = (score, answersCount, id, questions, scoreTota
             }]
         },
     });
+    await addTime(id, time)
 
     handleCorrection(questions)
 }
@@ -98,13 +104,13 @@ export const countScore = (answers, currentQuestion) => {
     let countScore = 0;
 
     for (let i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked && answers[i].isCorrect === 1) {
+        if (checkboxes[i].checked && parseInt(answers[i].isCorrect) === 1) {
             return 0
         }
-        if (!checkboxes[i].checked && answers[i].isCorrect === 0) {
+        if (!checkboxes[i].checked && parseInt(answers[i].isCorrect)=== 0) {
             return 0
         }
-        if (answers[i].isCorrect === 0) {
+        if (parseInt(answers[i].isCorrect) === 0) {
             countScore += parseInt(answers[i].score)
         }
     }
@@ -141,7 +147,7 @@ export const sumScore = (scoreCount) => {
     let result = 0;
 
     for (let i = 0; i < scoreCount.length; i++) {
-        result += scoreCount[i]
+        result += parseInt(scoreCount[i])
     }
 
     return result
@@ -182,12 +188,13 @@ const answersCorrection = (questions) => {
         newAnswers.classList.add('list-group')
 
         for (let j = 0; j < checkElements.length; j++) {
+
             newAnswers.innerHTML += `
                    <li class="list-group-item ms-5"  
-                       style="color:${checkElements[j].checked && answers[j].isCorrect === 1 ?
-                            "red" : answers[j].isCorrect === 0 && checkElements[j].checked ?
+                       style="color:${checkElements[j].checked && parseInt(answers[j].isCorrect) === 1 ?
+                            "red" : parseInt(answers[j].isCorrect) === 0 && checkElements[j].checked ?
                                     "DarkGreen" : 
-                                    !checkElements[j].checked && answers[j].isCorrect === 0 ?
+                                    !checkElements[j].checked && parseInt(answers[j].isCorrect) === 0 ?
                                         "DarkOrange" : ""}"> 
                        
                                 <i class="fa-regular fa-square${checkElements[j].checked ? "-check" : ""}"></i>
@@ -200,4 +207,5 @@ const answersCorrection = (questions) => {
         questionElements[i].appendChild(newAnswers)
     }
 }
+
 

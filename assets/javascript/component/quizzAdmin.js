@@ -10,24 +10,22 @@ export const getAccordion = (question, questionId) => {
     newQuestionElement.setAttribute('data-id', questionId);
     newQuestionElement.setAttribute("draggable", "true")
     newQuestionElement.innerHTML = ` 
-                <h2 class="accordion-header" >    
-                    <div class="d-flex justify-content-xxl-between m-3">
-                        <div class="questions-accordion" id="question-${questionId}">
-                            ${question === "" ? "Entrez votre Question" : question}
+                    <h2 class="accordion-header">
+                        <div class="d-flex justify-content-between align-items-center m-3">
+                            <div class="questions-accordion flex-grow-1 me-3" id="question-${questionId}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; height: 40px;">
+                                ${question === "" ? "Entrez votre Question" : question}
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <a href="#" class="m-2">
+                                    <i class="fa-solid fa-xmark delete-question-btn" data-id="${questionId}" style="color: #ff0000"></i>
+                                </a>
+                                <a href="#" class="m-2 collapsed collapse-btn" data-bs-toggle="collapse" data-bs-target="#collapse-${questionId}" aria-expanded="true" aria-controls="collapse">
+                                    <i class="fa-solid fa-chevron-down" data-id="${questionId}"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div >
-                           <a href="#" class="m-5"> 
-                                <i class="fa-solid fa-xmark delete-question-btn" 
-                                data-id="${questionId}" 
-                                style="color: #ff0000;"></i>
-                           </a>
-                           <a href="#" class="m-3 collapsed collapse-btn"  data-bs-toggle="collapse" data-bs-target="#collapse-${questionId}" 
-                              aria-expanded="true" aria-controls="collapse">
-                                 <i class="fa-solid fa-chevron-down"></i>
-                           </a> 
-                        </div>
-                    </div>
-                </h2>
+                    </h2>
+
                     <div id="collapse-${questionId}" 
                          class="accordion-collapse collapse" 
                          data-bs-parent="#accordion-${questionId}">
@@ -35,7 +33,7 @@ export const getAccordion = (question, questionId) => {
                             <input type="text" class="form-control questions" id="question-${questionId}"
                                    data-id="${questionId}" placeholder="Entrez votre question" 
                                    aria-label="Entrez votre question" aria-describedby="addon-wrapping-${questionId}"  
-                                   value="${question}" required>
+                                   value="${question}"  required>
 
                              <ul id="answers-${questionId}" class="col container answers">
                               
@@ -81,7 +79,6 @@ export const getAnswer = (answer, questionId, answerId) => {
 }
 export const handleChevron = () => {
     const accordionItems = document.querySelectorAll('.accordion')
-    const collapseButton = document.querySelectorAll(".collapse-btn")
 
     for (let i = 0; i < accordionItems.length; i++) {
         accordionItems[i].addEventListener('click', (e) => {
@@ -326,6 +323,7 @@ export const handleValidButton = (id) => {
             "id": parseInt(id),
             "name": document.querySelector('#quizz-name').value,
             "is_published": document.querySelector('#flexCheckPublished').checked ? 0 : 1,
+            "is_chrono": document.querySelector('#flexCheckChrono').checked ? 0 : 1,
             "questions": JSON.stringify(questionsData),
             "score": scoreTotal
         })
@@ -375,7 +373,7 @@ export const handleGoodAnswersInput = () => {
     });
 }
 
- const isMinimunAnswerCorrect = () => {
+const isMinimunAnswerCorrect = () => {
     const answers = document.querySelectorAll('.answers')
 
     for (let i = 0; i < answers.length; i++) {
@@ -385,7 +383,7 @@ export const handleGoodAnswersInput = () => {
     }
     return true
 }
- const isMinimunGoodAnswerCorrect = () => {
+const isMinimunGoodAnswerCorrect = () => {
     const answers = document.querySelectorAll('.answers')
     for (let i = 0; i < answers.length; i++) {
         let quantityGoodAnswer = 0
@@ -401,7 +399,7 @@ export const handleGoodAnswersInput = () => {
     return true
 }
 
- const isMinimunQuestionCorrect = () => {
+const isMinimunQuestionCorrect = () => {
     const questions = document.querySelector('#accordion')
 
     return questions.children.length >= 1
@@ -411,24 +409,22 @@ export const handleInput = () => {
     const accordionElement = document.querySelector("#accordion");
 
     accordionElement.addEventListener('click', (e) => {
-        if (e.target.closest('.form-control')) {
-            e.target.addEventListener('focusin', () => {
-                document.querySelectorAll('.accordion-item').forEach(bloc => {
-                    bloc.setAttribute('draggable', false)
-                })
+        e.target.addEventListener('focusin', () => {
+            document.querySelectorAll('.accordion-item').forEach(bloc => {
+                bloc.setAttribute('draggable', false)
             })
-            if (e.target.classList.value.includes("questions")) {
-                e.target.addEventListener('input', () => {
-                    document.querySelector(`#question-${e.target.getAttribute("data-id")}`).innerHTML = e.target.value
-                })
-            }
-
-            e.target.addEventListener('focusout', () => {
-                document.querySelectorAll('.accordion-item').forEach(bloc => {
-                    bloc.setAttribute('draggable', true)
-
-                })
+        })
+        if (e.target.classList.value.includes("questions")) {
+            e.target.addEventListener('input', () => {
+                document.querySelector(`#question-${e.target.getAttribute("data-id")}`).innerHTML = e.target.value
             })
         }
+
+        e.target.addEventListener('focusout', () => {
+            document.querySelectorAll('.accordion-item').forEach(bloc => {
+                bloc.setAttribute('draggable', true)
+
+            })
+        })
     })
 }

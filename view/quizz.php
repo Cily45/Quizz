@@ -42,10 +42,12 @@
         const questions = JSON.parse(data.quizz[0].questions)
         const countQuestions = questions.length
         const PROGRESS_BAR_WIDTH = Math.trunc(100 / countQuestions)
+        const dateStart= Date.now()
 
         let progressCount = 0
         let currentQuestion = 0
         let scoreCount = []
+
 
         titleQuizz.innerHTML = data.quizz[0].name
 
@@ -63,12 +65,12 @@
             currentQuestion++;
             progressCount = currentQuestion === countQuestions ? 100 : progressCount + PROGRESS_BAR_WIDTH
             updateProgressBar(progressCount)
-            scoreCount[currentQuestion - 1] = countScore(questions[currentQuestion - 1].answers, currentQuestion - 1)
+            scoreCount[currentQuestion - 1] = countScore((questions[currentQuestion - 1].answers), currentQuestion - 1)
 
 
             if (currentQuestion === countQuestions) {
                 document.querySelector(`#question-${currentQuestion - 1}-content`).classList.add('d-none')
-                displayResultQuizz(sumScore(scoreCount), getResult(scoreCount), id, questions, data.quizz[0].max_score)
+                displayResultQuizz(sumScore(scoreCount), getResult(scoreCount), id, questions, data.quizz[0].max_score, dateStart)
             } else {
                 changeQuestion(currentQuestion - 1, currentQuestion)
             }

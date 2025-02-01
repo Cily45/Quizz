@@ -13,11 +13,11 @@ function getQuizzAdmin(PDO $pdo, int $id): array|string
     }
 }
 
-function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $questions, int $maxScore): array|bool
+function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $questions, int $maxScore, int $isChono): array|bool
 {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query="INSERT INTO quizz (name, is_published, questions, max_score) VALUES (:name, :is_published, :questions, :maxScore)";
+    $query="INSERT INTO quizz (name, is_published, questions, max_score, is_chrono) VALUES (:name, :is_published, :questions, :maxScore, :isChrono)";
 
     $prep = $pdo->prepare($query);
 
@@ -25,6 +25,7 @@ function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $ques
     $prep->bindValue(':is_published', $isPublished,);
     $prep->bindValue(':questions', $questions);
     $prep->bindValue(':maxScore', $maxScore);
+    $prep->bindValue(':isChrono', $isChono);
 
     try
     {
@@ -40,11 +41,11 @@ function createQuizzAdmin(PDO $pdo, string $name, int $isPublished, string $ques
     return true;
 }
 
-function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, string $questions, int $maxScore): bool|array
+function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, string $questions, int $maxScore, int $isChrono): bool|array
 {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $query="UPDATE quizz SET name = :name, is_published = :is_published, questions = :questions, max_score = :maxScore WHERE id = :id";
+    $query="UPDATE quizz SET name = :name, is_published = :is_published, questions = :questions, max_score = :maxScore, is_chrono = :isChrono WHERE id = :id";
 
     $prep = $pdo->prepare($query);
 
@@ -53,6 +54,7 @@ function updateQuizzAdmin(PDO $pdo, int $id, string $name, int $isPublished, str
     $prep->bindValue(':is_published', $isPublished, PDO::PARAM_INT);
     $prep->bindValue(':questions', $questions, PDO::PARAM_STR);
     $prep->bindValue(':maxScore', $maxScore, PDO::PARAM_INT);
+    $prep->bindValue(':isChrono', $isChrono, PDO::PARAM_INT);
 
     try
     {

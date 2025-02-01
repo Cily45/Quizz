@@ -25,7 +25,19 @@ export const getQuizz = async (id)=>{
     return await response !== null ? response.json() : response
 }
 
+export const addTime = async (id, time) => {
+    const formData = new FormData();
+    formData.append('time', time);
+    const response = await fetch(`index.php?component=quizz&id=${id}&action=result`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        method: 'POST',
+        body: formData
+    })
 
+    return response.json()
+}
 
 
 

@@ -19,11 +19,19 @@
     </div>
     <ul class="accordion list-group" id="accordion">
     </ul>
-    <div class="form-check m-3 d-flex justify-content-end">
+    <div class="d-flex justify-content-end">
+    <div class="form-check m-3">
         <input class="form-check-input" type="checkbox" value="" id="flexCheckPublished" checked>
-        <label class="form-check-label ms-2" for="flexCheckChecked">
+        <label class="form-check-label ms-2" for="flexCheckPublished">
             Publier
         </label>
+    </div>
+    <div class="form-check m-3">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckChrono" checked>
+        <label class="form-check-label ms-2" for="flexCheckChrono">
+            Chronométrer
+        </label>
+    </div>
     </div>
 </form>
 
@@ -80,7 +88,6 @@
 
                 countQuestion++
             }
-                    console.log(data)
         }else{
             addNewQuestion()
         }

@@ -34,7 +34,6 @@ export const deletteQuizz = async (page, sortBy, id) => {
 }
 
 export const updateIsPublishedQuizz = async (page, sortBy, id) => {
-
     const response = await fetch(`index.php?component=quizzsAdmin&action=updateIsPublished&page=${page}&sortby=${sortBy}&id=${id}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -46,24 +45,28 @@ export const updateIsPublishedQuizz = async (page, sortBy, id) => {
 }
 
 export const createQuizz = async (data) => {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(data));
     const response = await fetch(`index.php?component=quizzAdmin&action=create`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         },
         method: 'POST',
-        body: JSON.stringify(data)
+        body: formData
     })
 
     return response.json()
 }
 
 export const updateQuizz = async (data, id) => {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(data));
     const response = await fetch(`index.php?component=quizzAdmin&action=update&id=${id}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         },
        method: 'POST',
-        body: JSON.stringify(data)
+        body: formData
     })
 
     return response.json()
