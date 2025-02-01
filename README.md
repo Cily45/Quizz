@@ -14,6 +14,9 @@ Front office users have the ability to choose and answer published quizzes, thus
 
 Finally, the scoring rules follow a strict approach: if not all correct answers are selected, the question is considered incorrect and no points are awarded.
 
+### Prerequisites
+* composer
+  
 ### Installation
 * Retrieve the database and install it.
 
@@ -52,6 +55,8 @@ Les utilisateurs du front office ont la possibilité de choisir et de répondre 
 
 Enfin, les règles de comptabilisation des bonnes réponses suivent une approche stricte : si toutes les bonnes réponses ne sont pas cochées, alors la question est considérée comme fausse et aucun point n'est attribué.
 
+### Prérequis
+* composer
 
 ### Instalation
 
@@ -71,7 +76,7 @@ composer require vlucas/phpdotenv
 php fixtures.php
 ```
 
-## Autheur
+## Auteur
 
 Cecile Fischer alias Cily
 En tant qu'etudiante chez Coda-Orléans
