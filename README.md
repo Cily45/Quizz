@@ -14,6 +14,8 @@ Front office users have the ability to choose and answer published quizzes, thus
 
 Finally, the scoring rules follow a strict approach: if not all correct answers are selected, the question is considered incorrect and no points are awarded.
 
+![alt text](https://github.com/cily/quizz/bdd.jpg?raw=true)
+
 ### Prerequisites
 * composer
   
