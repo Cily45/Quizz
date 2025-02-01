@@ -205,9 +205,7 @@ const maxId = () => {
             maxId = acordionElements[i].getAttribute('data-id')
         }
     }
-    console.log(maxId)
     return maxId
-
 }
 export const handleRemoveQuestion = () => {
     const accordionElement = document.querySelector("#accordion");

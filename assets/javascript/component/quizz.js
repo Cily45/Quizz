@@ -1,5 +1,6 @@
 import {formatTime} from "./shared/timer.js";
 import {addTime} from "../services/quizz.js";
+import {showToast} from "./shared/toast.js";
 
 export const getQuestion = (questions) => {
     let result = ""
@@ -84,8 +85,15 @@ export const displayResultQuizz = async (score, answersCount, id, questions, sco
             }]
         },
     });
-    await addTime(id, time)
+    let res = await addTime(id, time)
 
+    if (res.hasOwnProperty('bestTime')) {
+        showToast("Vous venez de faire le meilleur temps!!!", 'bg-success')
+    } else if(res.hasOwnProperty('success') ){
+        showToast("Votre temps à bien été pris en compte", 'bg-success')
+    } else {
+        showToast(`Une erreur a été rencontrée: ${result.error}`, 'bg-danger')
+    }
     handleCorrection(questions)
 }
 
