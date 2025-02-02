@@ -5,10 +5,11 @@ export const getCard = (quizz) => {
     const isTime = quizz.best_time !== null
 
 return `
-        <div class="card m-3" style="width: 18rem;">
+        <div class="card m-3" style="width: 18rem; height: 18rem">
             <div class="card-body d-flex flex-column justify-content-between">
-                <h5 class="card-title">${quizz.name}</h5>
-                <div class="mt-2">
+                <h5 class="card-title text-center" style="overflow: hidden; text-overflow: ellipsis; height: 6rem">${quizz.name}</h5>
+                <div class="mt-2 text-center">
+                    <hr>
                 ${isTime ? `
                             <p class="lh-1"><strong>Meilleur temps :</strong> ${formatTime(quizz.best_time)}</p>
                             <p class="lh-1"><strong>Temps Moyen :</strong> ${formatTime(quizz.average_time)}</p>

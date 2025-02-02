@@ -1,6 +1,6 @@
 <?php
 ?>
-<h1 class="text-center">Liste des quizz</h1>
+<h1 class="text-center">Liste des quizzs</h1>
 <div class="d-flex justify-content-center">
     <div class="spinner-grow text-warning d-none" id="spinner" role="status">
         <span class="visually-hidden">Loading...</span>

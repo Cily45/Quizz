@@ -41,7 +41,7 @@
         const previousBtn = document.querySelector("#previous-btn")
         const questions = JSON.parse(data.quizz[0].questions)
         const countQuestions = questions.length
-        const PROGRESS_BAR_WIDTH = Math.trunc(100 / countQuestions)
+        const PROGRESS_BAR_WIDTH = Math.round(100 / countQuestions)
         const dateStart = Date.now()
         let progressCount = 0
         let currentQuestion = 0

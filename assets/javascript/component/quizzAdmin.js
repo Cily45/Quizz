@@ -25,7 +25,7 @@ export const getAccordion = (question, questionId) => {
                                    data-bs-target="#collapse-${questionId}" 
                                    aria-expanded="true" 
                                    aria-controls="collapse">
-                                    <i class="fa-solid fa-chevron-down" data-id="${questionId}"></i>
+                                    <i class="fa-solid fa-chevron-down" id="chevron-${questionId}" data-id="${questionId}"></i>
                                 </a>
                             </div>
                         </div>
@@ -183,6 +183,7 @@ export const handleAddQuestion = () => {
     addQuestionBtnElements.addEventListener('click', (e) => {
         e.preventDefault()
         addNewQuestion()
+        handleAccordion()
     })
 }
 
@@ -205,8 +206,11 @@ export const addNewQuestion = () => {
         const question = document.querySelector(`#collapse-${id}`)
         question.classList.add('show')
         question.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'start'})
-    }
 
+        const chevron = document.querySelector(`#chevron-${id}`)
+        chevron.classList.remove(`fa-chevron-down`)
+        chevron.classList.add(`fa-chevron-up`)
+    }
 }
 
 const maxId = () => {
@@ -230,6 +234,7 @@ export const handleRemoveQuestion = () => {
     accordionElement.addEventListener('click', (e) => {
 
         if (e.target.closest('.delete-question-btn')) {
+            e.preventDefault()
             const id = e.target.getAttribute('data-id')
             document.querySelector(`#accordion-${id}`).remove()
         }
@@ -275,7 +280,6 @@ export const handleValidButton = (id) => {
     let result, message
 
     validButton.addEventListener('click', async () => {
-        window.scrollTo({top: 0, behavior: 'smooth'});
 
         if (!form.checkValidity()) {
             const accordions = document.querySelectorAll('.accordion-collapse');
@@ -310,8 +314,6 @@ export const handleValidButton = (id) => {
             alert("Il faut minimum 1 bonne réponse par question")
             return false
         }
-
-        window.scrollTo({top: 0, behavior: 'smooth'});
 
         const quizz = []
         const questionsData = []
@@ -361,6 +363,8 @@ export const handleValidButton = (id) => {
             result = await updateQuizz(data, id)
             message = 'Le quizz a été modifié avec succès'
         }
+
+        window.scrollTo({top: 0, behavior: 'smooth'});
 
         if (result.hasOwnProperty('success')) {
             showToast(message, 'bg-success')

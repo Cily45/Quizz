@@ -88,13 +88,12 @@ export const displayResultQuizz = async (score, answersCount, id, questions, sco
 
     let res = await addTime(id, time)
 
-    if (res.hasOwnProperty('bestTime')) {
-        showToast("Vous venez de faire le meilleur temps!!!", 'bg-success')
-    } else if (res.hasOwnProperty('success')) {
-        showToast("Votre temps à bien été pris en compte", 'bg-success')
+    if (res.hasOwnProperty('success')) {
+        showToast("Votre temps à bien été enregistré", 'bg-success')
     } else {
         showToast(`Une erreur a été rencontrée: ${result.error}`, 'bg-danger')
     }
+    
     handleCorrection(questions)
 }
 

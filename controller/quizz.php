@@ -27,8 +27,8 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
                 for ($i = 0; $i < count($times); $i++) {
                     $average += $times[$i]->time;
 
-                    if ($average < $min) {
-                        $max = $average;
+                    if ($times[$i]->time < $min) {
+                        $min = $times[$i]->time;
                     }
 
                 }
@@ -36,7 +36,7 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
                 $uptateQuizzTime = updateQuizzTime($pdo, $id, $average, $min);
 
                 if (is_bool($uptateQuizzTime)) {
-                    echo json_encode(['success' => true, 'bestTime' => $min === $time]);
+                    echo json_encode(['success' => true]);
                 } else {
                     echo json_encode(['error' => $result]);
                 }

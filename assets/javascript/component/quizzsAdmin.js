@@ -91,7 +91,7 @@ export const getRow = (quizz) => {
     return `
             <tr>
                 <th scope="row">${quizz.id}</th>
-                <td>${quizz.name}</td>
+                <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 300px; max-width: 500px;">${quizz.name}</td>
                 <td><a href="#">
                     <i class="btn-published ${quizz.is_published === 0 ?
                                             "fa-regular fa-eye text-success" :
