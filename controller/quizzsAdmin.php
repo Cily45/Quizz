@@ -15,12 +15,15 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
         $action = cleanString($_GET['action']);
         switch ($action) {
             case 'delete':
+                $deleteTimes = deleteTimes($pdo, $id);
                 $delete = deleteQuizzAdmin($pdo, $id);
                 header('Content-Type: application/json');
-                if (is_bool($delete)) {
+                if (is_bool($delete) && is_bool($deleteTimes)) {
                     echo json_encode(['success' => true]);
-                } else {
+                } else if(!is_bool($delete)) {
                     echo json_encode(['error' => $delete]);
+                }else {
+                    echo json_encode(['error' => $deleteTimes]);
                 }
                 exit();
             case 'updateIsPublished':

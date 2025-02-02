@@ -52,6 +52,20 @@ function deleteQuizzAdmin(PDO $pdo, int $id): bool|string
     return true;
 }
 
+function deleteTimes(PDO $pdo, int $id): bool|string
+{
+    $state = $pdo->prepare("DELETE FROM times WHERE quizz_id = :id");
+    $state->bindParam(':id', $id, PDO::PARAM_INT);
+
+    try {
+        $state->execute();
+    } catch (PDOException $e) {
+        return " erreur : " . $e->getCode() . ' ' . $e->getMessage();
+    }
+
+    return true;
+}
+
 function updateIsPublishedQuizzAdmin(PDO $pdo, int $id): bool|string
 {
     $state = $pdo->prepare("UPDATE quizz SET is_published = NOT is_published WHERE id = :id");
