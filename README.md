@@ -14,6 +14,11 @@ Front office users have the ability to choose and answer published quizzes, thus
 
 Finally, the scoring rules follow a strict approach: if not all correct answers are selected, the question is considered incorrect and no points are awarded.
 
+![image of the database](https://github.com/Cily45/Quizz/blob/developement/bdd.png))
+
+### Prerequisites
+* composer
+  
 ### Installation
 * Retrieve the database and install it.
 
@@ -42,16 +47,20 @@ As a student at Coda-Orléans
 
 Le projet est une application de quizz intégrant diverses fonctionnalités. Il a été réalise dans le cadre scolaire.
 
-### Backoffice
+### Backoffice 
 L'accès à la partie backoffice est sécurisé par un système d'authentification, garantissant que seules les personnes autorisées peuvent gérer les quizz et les questions. Vous pouvez créer, lire, mettre à jour et supprimer des quizz grâce à un système CRUD complet. De plus, une fonctionnalité de glisser-déposer (drag and drop) est disponible pour ordonner les questions, facilitant ainsi leur organisation. Chaque quizz possède un nom unique et peut être publié ou dépublié selon les besoins. Les quizz publiés sont alors accessibles aux utilisateurs côté front office, permettant une large diffusion.
 
 Les questions des quizz peuvent être de type simple ou multiple, avec des réponses affichées sous forme de boutons radio ou de cases à cocher, selon la nature de la question. De plus, les quizz peuvent avoir un chronomètre avec enregistrement du temps, permettant ainsi de visualiser le meilleur temps ainsi que le temps moyen pour chaque quizz.
 
-### Frontoffice
+### Frontoffice 
 Les utilisateurs du front office ont la possibilité de choisir et de répondre aux quizz publiés, favorisant ainsi une interactivité accrue. À la fin de chaque quizz, une barre de progression et un graphique de type doughnut sont affichés, offrant un aperçu visuel des performances de l'utilisateur. En termes de fonctionnalités optionnelles, les utilisateurs peuvent accéder au corrigé à la fin du quizz.
 
 Enfin, les règles de comptabilisation des bonnes réponses suivent une approche stricte : si toutes les bonnes réponses ne sont pas cochées, alors la question est considérée comme fausse et aucun point n'est attribué.
 
+![image de la base de donnée](https://github.com/Cily45/Quizz/blob/developement/bdd.png))
+
+### Prérequis
+* composer
 
 ### Instalation
 
@@ -71,10 +80,9 @@ composer require vlucas/phpdotenv
 php fixtures.php
 ```
 
-## Autheur
+## Auteur
 
 Cecile Fischer alias Cily
 En tant qu'etudiante chez Coda-Orléans
 
 [@CecileFischer](https://www.linkedin.com/in/fischercecile/)
-
