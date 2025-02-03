@@ -14,7 +14,9 @@ Front office users have the ability to choose and answer published quizzes, thus
 
 Finally, the scoring rules follow a strict approach: if not all correct answers are selected, the question is considered incorrect and no points are awarded.
 
-![alt text](https://github.com/cily/quizz/bdd.jpg?raw=true)
+
+![image of the database](https://github.com/Cily45/Quizz/blob/developement/bdd.png))
+
 
 ### Prerequisites
 * composer
@@ -57,6 +59,10 @@ Les utilisateurs du front office ont la possibilité de choisir et de répondre 
 
 Enfin, les règles de comptabilisation des bonnes réponses suivent une approche stricte : si toutes les bonnes réponses ne sont pas cochées, alors la question est considérée comme fausse et aucun point n'est attribué.
 
+
+![image de la base de donnée](https://github.com/Cily45/Quizz/blob/developement/bdd.png))
+
+
 ### Prérequis
 * composer
 
@@ -84,4 +90,3 @@ Cecile Fischer alias Cily
 En tant qu'etudiante chez Coda-Orléans
 
 [@CecileFischer](https://www.linkedin.com/in/fischercecile/)
-
